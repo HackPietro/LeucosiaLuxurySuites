@@ -21,15 +21,18 @@
     </div>
     <nav>
       <ul>
-        <li><a href="#" class="active">Home</a></li>
-        <li><a href="#">Camere</a></li>
-        <li><a href="#">Servizi</a></li>
-        <li><a href="#">Ristorante</a></li>
-        <li><a href="#">Contatti</a></li>
+        <li><a href="" class="active">Home</a></li>
+        <li><a href="#servizi">Servizi</a></li>
+        <li><a href="#camere">Camere</a></li>
+        <li><a href="#contatti">Contatti</a></li>
       </ul>
     </nav>
-    <div class="header-buttons">
-      <a href="http://localhost:8080/registration" class="profile-button"><i class="fas fa-user"></i> Profilo</a>
+    <div class="profile-button">
+      <a href="http://localhost:8080/login" class="btn btn-profile">
+        <i class="fas fa-user"></i> Profilo
+      </a>
+    </div>
+    <div class="booking-button">
       <a href="#" class="btn">Prenota Ora</a>
     </div>
   </div>
@@ -43,7 +46,7 @@
   </div>
 </section>
 
-<section class="services">
+<section class="services" id="servizi">
   <div class="container">
     <h2 class="section-title">I Nostri Servizi</h2>
     <div class="services-grid">
@@ -71,7 +74,7 @@
   </div>
 </section>
 
-<section class="rooms">
+<section class="rooms" id="camere">
   <div class="container">
     <h2 class="section-title">Le Nostre Camere</h2>
     <div class="rooms-grid">
@@ -159,12 +162,42 @@
   </div>
 </section>
 
-<section class="cta">
+<section class="contact-section" id="contatti">
   <div class="container">
-    <div class="cta-content">
-      <h2>Prenota Ora il Tuo soggiorno da Sogno</h2>
-      <p>Approfitta delle nostre offerte speciali e garantisci subito la tua vacanza perfetta</p>
-      <a href="#" class="btn btn-large">Prenota Ora</a>
+    <h2 class="section-title">Contattaci</h2>
+    <div class="contact-container">
+      <div class="contact-info">
+        <div class="contact-card">
+          <i class="fas fa-map-marker-alt"></i>
+          <h3>Indirizzo</h3>
+          <p>Via Pechino, snc<br>87064, Corigliano Calabro, Italia</p>
+        </div>
+        <div class="contact-card">
+          <i class="fas fa-phone"></i>
+          <h3>Telefono</h3>
+          <p>+39 389 2347941</p>
+        </div>
+        <div class="contact-card">
+          <i class="fas fa-envelope"></i>
+          <h3>Email</h3>
+          <p>leucosialuxurysuites&#64;gmail.com</p>
+        </div>
+      </div>
+      <div class="contact-form">
+        <h3>Inviaci un messaggio</h3>
+        <form>
+          <div class="form-group">
+            <input type="text" placeholder="Nome" required>
+          </div>
+          <div class="form-group">
+            <input type="email" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <textarea placeholder="Il tuo messaggio" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="btn">Invia messaggio</button>
+        </form>
+      </div>
     </div>
   </div>
 </section>
