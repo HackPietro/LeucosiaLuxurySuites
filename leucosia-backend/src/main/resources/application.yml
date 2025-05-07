@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+jwt:
+  secret: 55a8a964a3091150dee241ea80af9e82b085eb125a2f148356d12f31be9451c1658e262fd057566725f1b61fd000c20a447d16c9c4a448ae7e536cd01163b7fc1711f07ca0a2f3e63d83a5cf8dfd4b63ce2f6111823e4a80e7e7c205ebc032cea8cb3252f1951330faed286063e0d8e876b4c551c0a76df8462377bd126c81d59f03bb808470b732b30bd5c24f75ed61cbbb0d81e30296636ee62f861cbdd71b110ea50bbe50b798846da3623f09199170e415ebd6b9682e7b12862c4e4c54ddb1709d1e78ac0086ad2f7c1f6e1062c7de1059009e6bbbf9da6f31d96e1665b920dfeff3844f25f891db981591dba6c92712fef090eb995862f6b08bac818bc2
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 374940734438-dfb27irs5ub7l6dpjkv4jatmd4qv0c3l.apps.googleusercontent.com
+            client-secret: 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
