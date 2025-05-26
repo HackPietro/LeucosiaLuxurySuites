@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,14 +25,54 @@
         <li><a href="#contatti">Contatti</a></li>
       </ul>
     </nav>
-    <div class="profile-button">
-      <a href="http://localhost:8080/login" class="btn btn-profile">
+    <!-- Bottone Profilo con mat-menu (visibile solo se loggato) -->
+    <div [hidden]="isAuthenticated()">
+      <button mat-button [matMenuTriggerFor]="profileMenu">
         <i class="fas fa-user"></i> Profilo
+      </button>
+      <mat-menu #profileMenu="matMenu">
+        <button mat-menu-item routerLink="/profilo">
+          <i class="fas fa-user menu-icon"></i>
+          <span>Profilo</span>
+        </button>
+        <button mat-menu-item routerLink="/prenotazioni">
+          <i class="fas fa-calendar-check menu-icon"></i>
+          <span>Gestione Camere</span>
+        </button>
+        <button mat-menu-item routerLink="/prenotazioni">
+          <i class="fas fa-calendar-check menu-icon"></i>
+          <span>Gestione Prenotazioni</span>
+        </button>
+        <button mat-menu-item routerLink="/prenotazioni">
+          <i class="fas fa-calendar-check menu-icon"></i>
+          <span>Richiedi intervento</span>
+        </button>
+        <button mat-menu-item routerLink="/prenotazioni">
+          <i class="fas fa-calendar-check menu-icon"></i>
+          <span>News</span>
+        </button>
+        <button mat-menu-item routerLink="/prenotazioni">
+          <i class="fas fa-calendar-check menu-icon"></i>
+          <span>Recensioni</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <i class="fas fa-sign-out-alt menu-icon"></i>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    <!-- Bottone Login (visibile solo se NON loggato) -->
+    <div [hidden]="isAuthenticated()">
+      <a mat-button href="http://localhost:8080/login">
+        <i class="fas fa-user"></i> Login
       </a>
     </div>
+
     <div class="booking-button">
-      <a href="#" class="btn">Prenota Ora</a>
+      <button class="btn">Prenota Ora</button>
     </div>
+
   </div>
 </header>
 
@@ -244,4 +282,3 @@
   </div>
 </footer>
 </body>
-</html>

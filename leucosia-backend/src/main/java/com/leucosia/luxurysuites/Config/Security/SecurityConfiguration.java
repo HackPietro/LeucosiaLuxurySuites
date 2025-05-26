@@ -23,7 +23,7 @@ public class SecurityConfiguration {
     private static final String[] PATH_WHITELIST = {
             "/registration",
             "/login", // GET per visualizzare la pagina di login
-            "/utente-api/doLogin",  // POST per processare il login
+            "/utente-api/login",  // POST per processare il login
             "/styles/**",           // CSS
             "/js/**",               // JS
             "/images/**",            // Immagini
