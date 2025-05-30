@@ -3,6 +3,7 @@ package com.leucosia.luxurysuites.Config.Security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -21,12 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     private static final String[] PATH_WHITELIST = {
-            "/registration",
-            "/login", // GET per visualizzare la pagina di login
-            "/utente-api/login",  // POST per processare il login
-            "/styles/**",           // CSS
-            "/js/**",               // JS
-            "/images/**",            // Immagini
+            "/utente-api/doLogin",  // POST per processare il login
+            "/utente-api/doRegistration",  // POST per processare la registration
+            "/styles/**",  // CSS
+            "/js/**",  // JS
+            "/images/**",  // Immagini
             "/error"
     };
 
@@ -40,8 +40,10 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(PATH_WHITELIST).permitAll();
-                    auth.anyRequest().authenticated();
+                    auth
+                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ AGGIUNGI QUESTO
+                            .requestMatchers(PATH_WHITELIST).permitAll()
+                            .anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Disabilita la sessione

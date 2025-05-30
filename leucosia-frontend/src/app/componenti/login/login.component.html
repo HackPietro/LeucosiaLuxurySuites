@@ -1,0 +1,19 @@
+<div class="container">
+  <div style="text-align: center;">
+    <h2>Accedi</h2>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <form class="form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required (input)="clearError()" />
+    <input type="password" name="password" [(ngModel)]="password" placeholder="Password" required (input)="clearError()" />
+    <a routerLink="/password-recovery">Password dimenticata?</a>
+    <button type="submit">Accedi</button>
+    <button type="button" routerLink="/registration">Registrati</button>
+    <button type="button" routerLink="/">Torna alla home</button>
+  </form>
+</div>
+

@@ -1,0 +1,124 @@
+<div class="news-container">
+  <header class="news-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-newspaper"></i>
+        News & Aggiornamenti
+      </h1>
+      <p class="page-subtitle">Resta aggiornato sulle ultime novità di Leucosia Luxury Suites</p>
+    </div>
+
+    <!-- Pulsante per creare nuova news (solo admin) -->
+    <div *ngIf="utenteOrAdmin() === 'admin'" class="admin-actions">
+      <button class="btn btn-create" (click)="toggleCreateForm()">
+        <i class="fas fa-plus"></i>
+        {{ showCreateForm ? 'Annulla' : 'Nuova News' }}
+      </button>
+    </div>
+  </header>
+
+  <!-- Form per creare nuova news (solo admin) -->
+  <div *ngIf="showCreateForm && utenteOrAdmin() === 'admin'" class="create-news-form">
+    <div class="form-container">
+      <h2 class="form-title">
+        <i class="fas fa-edit"></i>
+        Crea Nuova News
+      </h2>
+
+      <form (ngSubmit)="creaNews()" #newsForm="ngForm">
+        <div class="form-group">
+          <label for="titolo">Titolo *</label>
+          <input
+            type="text"
+            id="titolo"
+            [(ngModel)]="nuovaNews.titolo"
+            name="titolo"
+            placeholder="Inserisci il titolo della news"
+            required
+            maxlength="100">
+        </div>
+
+        <div class="form-group">
+          <label for="autore">Autore *</label>
+          <input
+            type="text"
+            id="autore"
+            [(ngModel)]="nuovaNews.autore"
+            name="autore"
+            placeholder="Il tuo nome"
+            required
+            maxlength="50">
+        </div>
+
+        <div class="form-group">
+          <label for="contenuto">Contenuto *</label>
+          <textarea
+            id="contenuto"
+            [(ngModel)]="nuovaNews.contenuto"
+            name="contenuto"
+            placeholder="Scrivi il contenuto della news..."
+            required
+            rows="6"
+            maxlength="1000"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-cancel" (click)="toggleCreateForm()">
+            <i class="fas fa-times"></i>
+            Annulla
+          </button>
+          <button type="submit" class="btn btn-submit" [disabled]="!newsForm.form.valid">
+            <i class="fas fa-save"></i>
+            Pubblica News
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lista delle news -->
+  <div class="news-list">
+    <div *ngIf="news.length === 0" class="no-news">
+      <i class="fas fa-newspaper"></i>
+      <h3>Nessuna news disponibile</h3>
+      <p>Non ci sono ancora news pubblicate.</p>
+    </div>
+
+    <div *ngFor="let newsItem of news" class="news-card">
+      <div class="news-meta">
+        <div class="news-date">
+          <i class="fas fa-calendar-alt"></i>
+          {{ formatDate(newsItem.data) }}
+        </div>
+        <div class="news-author">
+          <i class="fas fa-user"></i>
+          {{ newsItem.autore }}
+        </div>
+
+        <!-- Pulsante elimina (solo admin) -->
+        <div *ngIf="utenteOrAdmin() === 'admin'" class="news-actions">
+          <button class="btn-delete" (click)="newsItem.id !== undefined && eliminaNews(newsItem.id)" title="Elimina news">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="news-content">
+        <h2 class="news-title">{{ newsItem.titolo }}</h2>
+        <p class="news-text">{{ newsItem.contenuto }}</p>
+      </div>
+
+      <div class="news-footer">
+        <div class="news-id">ID: #{{ newsItem.id }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pulsante torna alla home -->
+  <div class="back-to-home">
+    <a routerLink="/" class="btn btn-back">
+      <i class="fas fa-arrow-left"></i>
+      Torna alla Home
+    </a>
+  </div>
+</div>

@@ -9,6 +9,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.leucosia.luxurysuites.Data.Dao.UtenteDao;
 import com.leucosia.luxurysuites.Data.Entities.Utente;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,19 +48,33 @@ public class TokenStore {
             throw new IllegalArgumentException("JWT secret key is not set.");
         }
     }
-    public String createToken(Map<String, Object> claims) throws JOSEException {
-        Instant issuedAt = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+
+    public String createAccessToken(Map<String, Object> claims) throws JOSEException {
+        return createToken(claims, 15);
+    }
+
+    public String createRefreshToken(Map<String, Object> claims) throws JOSEException {
+        return createToken(claims, 10080);
+    }
+
+    private String createToken(Map<String, Object> claims, int expirationMinutes) throws JOSEException {
+        Instant issuedAt = Instant.now();
         Instant notBefore = issuedAt.minus(5, ChronoUnit.SECONDS);
-        Instant expiration = issuedAt.plus(24, ChronoUnit.HOURS);
+        Instant expiration = issuedAt.plus(expirationMinutes, ChronoUnit.MINUTES);
 
         JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
-        for(String entry : claims.keySet())
-            builder.claim(entry, claims.get(entry));
-        JWTClaimsSet claimsSet = builder.issueTime(Date.from(issuedAt)).notBeforeTime(Date.from(notBefore)).expirationTime(Date.from(expiration)).build();
-        Payload payload = new Payload(claimsSet.toJSONObject());
+        claims.forEach(builder::claim);
 
+        JWTClaimsSet claimsSet = builder
+                .issueTime(Date.from(issuedAt))
+                .notBeforeTime(Date.from(notBefore))
+                .expirationTime(Date.from(expiration))
+                .build();
+
+        Payload payload = new Payload(claimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(new JWSHeader(JWSAlgorithm.HS256), payload);
         jwsObject.sign(new MACSigner(secretKey.getBytes()));
+
         return jwsObject.serialize();
     }
 
@@ -99,15 +114,30 @@ public class TokenStore {
 
 
     public String getToken(HttpServletRequest request) {
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(header != null && header.startsWith("Bearer "))
-            return header.replace("Bearer ", "");
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("access_token".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
         return "invalid";
     }
+
 
     public String extractToken(ResponseEntity<?> response){
         String authorizationHeader = Objects.requireNonNull(response.getHeaders().get("Authorization")).get(0);
         return authorizationHeader.substring("Bearer ".length());
+    }
+
+    public String getRefreshToken(HttpServletRequest request) {
+        if (request.getCookies() == null) return null;
+        for (Cookie cookie : request.getCookies()) {
+            if ("refresh_token".equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+        return null;
     }
 
 }

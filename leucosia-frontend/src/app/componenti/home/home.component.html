@@ -25,49 +25,55 @@
         <li><a href="#contatti">Contatti</a></li>
       </ul>
     </nav>
+
+    <!-- Bottone Login (visibile solo se NON loggato) -->
+    <div *ngIf="!showMenu">
+      <a mat-button routerLink="/login">
+        <i class="fas fa-user"></i> Profilo
+      </a>
+    </div>
+
     <!-- Bottone Profilo con mat-menu (visibile solo se loggato) -->
-    <div [hidden]="isAuthenticated()">
+    <div *ngIf="showMenu">
       <button mat-button [matMenuTriggerFor]="profileMenu">
         <i class="fas fa-user"></i> Profilo
       </button>
+
       <mat-menu #profileMenu="matMenu">
         <button mat-menu-item routerLink="/profilo">
-          <i class="fas fa-user menu-icon"></i>
-          <span>Profilo</span>
+          <i class="fas fa-user"></i>
+          <span> Profilo </span>
         </button>
+
+        <button *ngIf="utenteOrAdmin() === 'admin'" mat-menu-item routerLink="/camere">
+          <i class="fas fa-bed menu-icon"></i>
+          <span> Gestione Camere </span>
+        </button>
+
         <button mat-menu-item routerLink="/prenotazioni">
-          <i class="fas fa-calendar-check menu-icon"></i>
-          <span>Gestione Camere</span>
+          <i class="fas fa-calendar-alt menu-icon"></i>
+          <span> Gestione Prenotazioni </span>
         </button>
-        <button mat-menu-item routerLink="/prenotazioni">
-          <i class="fas fa-calendar-check menu-icon"></i>
-          <span>Gestione Prenotazioni</span>
+
+        <button mat-menu-item routerLink="/news">
+          <i class="fas fa-newspaper menu-icon"></i>
+          <span *ngIf="utenteOrAdmin() === 'admin'; else newsUser"> Gestione News </span>
+          <ng-template #newsUser>News</ng-template>
         </button>
-        <button mat-menu-item routerLink="/prenotazioni">
-          <i class="fas fa-calendar-check menu-icon"></i>
-          <span>Richiedi intervento</span>
+
+        <button mat-menu-item routerLink="/interventi">
+          <i class="fas fa-tools menu-icon"></i>
+          <span *ngIf="utenteOrAdmin() === 'admin'; else interventoUser"> Gestione Messaggi </span>
+          <ng-template #interventoUser>Richiedi intervento</ng-template>
         </button>
-        <button mat-menu-item routerLink="/prenotazioni">
-          <i class="fas fa-calendar-check menu-icon"></i>
-          <span>News</span>
-        </button>
-        <button mat-menu-item routerLink="/prenotazioni">
-          <i class="fas fa-calendar-check menu-icon"></i>
-          <span>Recensioni</span>
-        </button>
+
         <button mat-menu-item (click)="logout()">
           <i class="fas fa-sign-out-alt menu-icon"></i>
-          <span>Logout</span>
+          <span> Logout </span>
         </button>
       </mat-menu>
     </div>
 
-    <!-- Bottone Login (visibile solo se NON loggato) -->
-    <div [hidden]="isAuthenticated()">
-      <a mat-button href="http://localhost:8080/login">
-        <i class="fas fa-user"></i> Login
-      </a>
-    </div>
 
     <div class="booking-button">
       <button class="btn">Prenota Ora</button>

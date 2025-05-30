@@ -1,0 +1,423 @@
+/* Impostazioni di base con font migliorato */
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  background-image: linear-gradient(135deg, #f0f0f0 25%, #e6e6e6 25%, #e6e6e6 50%, #f0f0f0 50%, #f0f0f0 75%, #e6e6e6 75%, #e6e6e6 100%);
+  background-size: 40px 40px;
+}
+
+h1 {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  font-size: 20px;
+  color: #333;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Impostazione sfondo con effetto */
+.background {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.background::before {
+  content: "";
+  background-image: url("/assets/background.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: blur(6px);
+  -webkit-filter: blur(6px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Contenitore principale - PIÙ LARGO */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 450px;
+  width: 90%;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.8s ease-out;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  margin: 20px;
+}
+
+/* Effetto pattern di sfondo sottile */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+  z-index: -1;
+  border-radius: 8px;
+}
+
+/* Tabella */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.9);
+  animation: fadeIn 0.8s ease-out;
+}
+
+th, td {
+  border: 1px solid #e0e0e0;
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+th {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 13px;
+  background: linear-gradient(135deg, #f0f0f0, #e6e6e6);
+  color: #333;
+  letter-spacing: 0.5px;
+}
+
+/* Bottone Dettagli Ordine */
+.detail-button {
+  padding: 8px 14px;
+  font-size: 13px;
+  background: linear-gradient(135deg, #d4af37, #b8860b);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.detail-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(212, 175, 55, 0.3);
+}
+
+.detail-button:active {
+  animation: pulse 0.8s;
+}
+
+/* Profilo info */
+.profile-info {
+  margin-bottom: 20px;
+}
+
+.field {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 5px;
+  letter-spacing: 0.3px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  font-size: 13px;
+  color: #333;
+  height: 36px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+input:focus, select:focus {
+  border-color: #d4af37;
+  outline: none;
+  box-shadow: 0 1px 4px rgba(212, 175, 55, 0.2);
+}
+
+/* Bottoni azioni */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.actions button {
+  flex: 1;
+  margin: 0 8px;
+  padding: 8px 15px;
+  height: auto;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 140px;
+}
+
+.modifyContent {
+  background: linear-gradient(135deg, #d4af37, #b8860b);
+  color: white;
+}
+
+.applyContent {
+  background: linear-gradient(135deg, #d4af37, #b8860b);
+  color: white;
+}
+
+.modifyContent:hover, .applyContent:hover {
+  transform: translateY(-1px);
+}
+
+.modifyContent:hover {
+  box-shadow: 0 3px 6px rgba(212, 175, 55, 0.3);
+}
+
+.applyContent:hover {
+  box-shadow: 0 3px 6px rgba(212, 175, 55, 0.3);
+}
+
+.modifyContent:active, .applyContent:active {
+  animation: pulse 0.8s;
+}
+
+/* Password input */
+.password-input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-input-container input {
+  flex: 1;
+  padding-right: 30px;
+}
+
+.password-input-container i {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #666;
+}
+
+.toggle-password-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #999;
+  transition: color 0.3s ease;
+}
+
+.toggle-password-icon:hover {
+  color: #d4af37;
+}
+
+/* Prima riga - PIÙ LARGA */
+.firstRow {
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  display: flex;
+  border-radius: 20px;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.85);
+  margin: 20px 100px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  animation: fadeIn 0.6s ease-out;
+  max-width: 800px;
+  width: 80%;
+}
+
+.firstRow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+  z-index: -1;
+  border-radius: 20px;
+}
+
+/* Container2 - PIÙ LARGO */
+.container2 {
+  margin-left: 60px;
+  overflow-y: auto;
+  max-height: 600px;
+  padding-right: 15px;
+  width: 80%;
+  max-width: 800px;
+}
+
+/* Effetti di accentuazione aggiuntivi */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+  70% { box-shadow: 0 0 0 5px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+/* Animazioni per caricamento graduale */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsività */
+@media screen and (max-width: 900px) {
+  .firstRow {
+    margin: 20px 50px;
+    width: 90%;
+  }
+
+  .container2 {
+    margin-left: 30px;
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .firstRow {
+    margin: 15px 30px;
+    padding: 15px;
+    width: 90%;
+  }
+
+  .container {
+    padding: 15px;
+    max-width: 400px;
+  }
+
+  .container2 {
+    margin-left: 20px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 95%;
+    padding: 12px;
+    margin: 10px auto;
+    max-width: 350px;
+  }
+
+  .background {
+    width: 100%;
+  }
+
+  .profile-info {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  .firstRow {
+    padding: 12px;
+    border-radius: 15px;
+    margin: 10px;
+    width: 95%;
+  }
+
+  .actions button {
+    margin: 0 5px;
+    padding: 6px 10px;
+    max-width: 120px;
+  }
+
+  .container2 {
+    margin-left: 10px;
+    max-height: 450px;
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 18px;
+  }
+
+  .container {
+    padding: 10px;
+    max-width: 320px;
+  }
+
+  .field {
+    margin-bottom: 8px;
+  }
+
+  input, select {
+    font-size: 12px;
+    padding: 6px 10px;
+    height: 32px;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .actions button {
+    width: 100%;
+    margin: 0;
+    max-width: none;
+  }
+
+  .firstRow {
+    padding: 10px;
+  }
+}

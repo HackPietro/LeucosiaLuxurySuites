@@ -25,7 +25,6 @@ body {
 
 body::before {
     content: "";
-    background-image: url("../immagini/background.jpg");
     background-size: cover;
     background-position: center;
     filter: blur(6px);
@@ -178,7 +177,6 @@ body::before {
     margin-bottom: 15px;
     width: 48px;
     height: 48px;
-    background-image: url("../immagini/error.png");
     background-repeat: no-repeat;
     background-size: contain;
     animation: pulse 1.5s infinite;

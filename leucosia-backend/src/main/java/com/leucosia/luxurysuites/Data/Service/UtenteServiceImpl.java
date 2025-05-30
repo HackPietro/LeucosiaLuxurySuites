@@ -7,29 +7,19 @@ import com.leucosia.luxurysuites.Dto.UtenteDto;
 import com.nimbusds.jose.JOSEException;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.*;
 
 @Service
-public class UtenteServiceImpl implements UtenteService, UserDetailsService {
+public class UtenteServiceImpl implements UtenteService {
 
     private final UtenteDao utenteDao;
     private final ModelMapper modelMapper;
@@ -56,16 +46,26 @@ public class UtenteServiceImpl implements UtenteService, UserDetailsService {
 
     @Override
     public UtenteDto getById(Long id) {
-        Utente utente = utenteDao.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
-        return modelMapper.map(utente, UtenteDto.class);
+        Utente utente = utenteDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
+        UtenteDto utenteDto = modelMapper.map(utente, UtenteDto.class);
+        utenteDto.setPassword(utente.getCredenziali().getPassword());  // mappa manualmente la password
+        return utenteDto;
     }
 
+
     @Override
-    public UtenteDto getByCEmail(String email) {
-        Utente utente = utenteDao.findByCredenzialiEmail(email).orElseThrow(() -> new EntityNotFoundException(
-                String.format("La seguente email non è presente: [%s]", email)));
-        return modelMapper.map(utente, UtenteDto.class);
+    public UtenteDto getByEmail(String email) {
+        Utente utente = utenteDao.findByCredenzialiEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("La seguente email non è presente: [%s]", email)));
+
+        UtenteDto utenteDto = modelMapper.map(utente, UtenteDto.class);
+        utenteDto.setPassword(utente.getCredenziali().getPassword());
+        utenteDto.setEmail(utente.getCredenziali().getEmail());
+        return utenteDto;
     }
+
 
     @Override
     public UtenteDto getUserByToken(String token) throws ParseException, JOSEException {
@@ -90,15 +90,15 @@ public class UtenteServiceImpl implements UtenteService, UserDetailsService {
     }
 
 
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByEmailForSecurity(String email) throws UsernameNotFoundException {
         Optional<Utente> utente = utenteDao.findByCredenzialiEmail(email);
         if (utente.isPresent()) {
             Utente user = utente.get();
             List<SimpleGrantedAuthority> authorities;
-            if (user.getIsAdmin()) {
-                authorities = List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            if (user.getTipologia().equals("admin")) {
+                authorities = List.of(new SimpleGrantedAuthority("admin"));
             } else {
-                authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+                authorities = List.of(new SimpleGrantedAuthority("utente"));
             }
             return new User(
                     user.getCredenziali().getEmail(),
@@ -108,4 +108,9 @@ public class UtenteServiceImpl implements UtenteService, UserDetailsService {
         }
         throw new UsernameNotFoundException("User not found");
     }
+
+    public boolean emailExists(String email) {
+        return utenteDao.findByCredenzialiEmail(email).isPresent();
+    }
+
 }
