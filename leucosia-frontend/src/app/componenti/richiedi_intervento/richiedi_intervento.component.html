@@ -1,0 +1,80 @@
+<div class="messages-container">
+  <header class="messages-header">
+    <h1 class="page-title">
+      <i class="fas fa-envelope"></i>
+      Invia Messaggio
+    </h1>
+    <p class="page-subtitle">Contattaci per qualsiasi informazione o richiesta</p>
+  </header>
+
+  <!-- SUCCESSO -->
+  <div *ngIf="successMessage" class="alert alert-success" id="successAlert">
+    <i class="fas fa-check-circle"></i>
+    {{ successMessage }}
+  </div>
+
+  <!-- ERRORE -->
+  <div *ngIf="errorMessage" class="alert alert-error" id="errorAlert">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- FORM -->
+  <div class="message-form">
+    <h2 class="form-title">
+      <i class="fas fa-comment-dots"></i>
+      Compila il modulo
+    </h2>
+
+    <form (ngSubmit)="onSubmit()" #messageForm="ngForm">
+      <div class="form-group">
+        <label for="tipologia">Tipologia <span class="required">*</span></label>
+        <select
+          id="tipologia"
+          name="tipologia"
+          required
+          [(ngModel)]="tipologia"
+        >
+          <option value="">Seleziona una tipologia</option>
+          <option value="Prenotazione">Prenotazione</option>
+          <option value="Informazioni">Informazioni</option>
+          <option value="Reclamo">Reclamo</option>
+          <option value="Complimento">Complimento</option>
+          <option value="Supporto">Supporto</option>
+          <option value="Altro">Altro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="messaggio">Messaggio <span class="required">*</span></label>
+        <textarea
+          id="messaggio"
+          name="messaggio"
+          required
+          maxlength="1000"
+          [(ngModel)]="contenutoMessaggio"
+          placeholder="Scrivi qui il tuo messaggio..."
+        ></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-clear" (click)="clearForm()">
+          <i class="fas fa-eraser"></i>
+          Cancella
+        </button>
+        <button type="submit" class="btn btn-submit">
+          <i class="fas fa-paper-plane"></i>
+          Invia Messaggio
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- TORNA INDIETRO -->
+  <div class="back-to-home">
+    <a href="#" class="btn btn-back">
+      <i class="fas fa-arrow-left"></i>
+      Torna Indietro
+    </a>
+  </div>
+</div>

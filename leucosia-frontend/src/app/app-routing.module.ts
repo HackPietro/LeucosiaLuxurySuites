@@ -5,6 +5,8 @@ import {ProfiloComponent} from "./componenti/profilo/profilo.component";
 import {LoginComponent} from "./componenti/login/login.component";
 import {RegistrationComponent} from "./componenti/registration/registration.component";
 import {NewsComponent} from "./componenti/news/news.component";
+import {Gestione_messaggiComponent} from "./componenti/gestione_messaggi/gestione_messaggi.component";
+import {Richiedi_interventoComponent} from "./componenti/richiedi_intervento/richiedi_intervento.component";
 
 
 const routes: Routes = [
@@ -16,6 +18,8 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
     ],
   },
+  { path: 'richiedi_intervento', component: Richiedi_interventoComponent },
+  { path: 'gestione_messaggi', component: Gestione_messaggiComponent },
   { path: 'news', component: NewsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },

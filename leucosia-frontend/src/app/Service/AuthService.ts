@@ -60,5 +60,8 @@ export class AuthService {
     });
   }
 
+  updateUtente(email: string, utente: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/doUpdate/${email}`, utente, { withCredentials: true });
+  }
 
 }

@@ -58,13 +58,13 @@
         <button mat-menu-item routerLink="/news">
           <i class="fas fa-newspaper menu-icon"></i>
           <span *ngIf="utenteOrAdmin() === 'admin'; else newsUser"> Gestione News </span>
-          <ng-template #newsUser>News</ng-template>
+          <ng-template #newsUser> News </ng-template>
         </button>
 
-        <button mat-menu-item routerLink="/interventi">
+        <button mat-menu-item [routerLink]="utenteOrAdmin() === 'admin' ? '/gestione_messaggi' : '/richiedi_intervento'">
           <i class="fas fa-tools menu-icon"></i>
           <span *ngIf="utenteOrAdmin() === 'admin'; else interventoUser"> Gestione Messaggi </span>
-          <ng-template #interventoUser>Richiedi intervento</ng-template>
+          <ng-template #interventoUser> Richiedi intervento </ng-template>
         </button>
 
         <button mat-menu-item (click)="logout()">
@@ -217,14 +217,19 @@
           <p>Via Pechino, snc<br>87064, Corigliano Calabro, Italia</p>
         </div>
         <div class="contact-card">
-          <i class="fas fa-phone"></i>
-          <h3>Telefono</h3>
-          <p>+39 389 2347941</p>
-        </div>
-        <div class="contact-card">
           <i class="fas fa-envelope"></i>
           <h3>Email</h3>
           <p>leucosialuxurysuites&#64;gmail.com</p>
+        </div>
+        <div class="contact-card">
+          <i class="fas fa-phone"></i>
+          <h3>Telefono</h3>
+          <p>+39 0983 889674</p>
+        </div>
+        <div class="contact-card">
+          <i class="fas fa-phone"></i>
+          <h3>Cellulare</h3>
+          <p>+39 389 2347941</p>
         </div>
       </div>
       <div class="contact-form">
@@ -258,9 +263,8 @@
         <h3>Collegamenti Rapidi</h3>
         <ul>
           <li><a href="#">Home</a></li>
-          <li><a href="#">Camere</a></li>
           <li><a href="#">Servizi</a></li>
-          <li><a href="#">Ristorante</a></li>
+          <li><a href="#">Camere</a></li>
           <li><a href="#">Contatti</a></li>
         </ul>
       </div>
@@ -269,8 +273,8 @@
         <div class="social-icons">
           <a href="#"><i class="fab fa-facebook"></i></a>
           <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-tiktok"></i></a>
           <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-tripadvisor"></i></a>
         </div>
       </div>
       <div class="footer-newsletter">

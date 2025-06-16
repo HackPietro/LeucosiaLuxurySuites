@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {Service} from "../../Service/Service";
 import {BreakpointObserver, BreakpointState} from "@angular/cdk/layout";
 import { AuthService } from '../../Service/AuthService';
 import { Router } from '@angular/router';
@@ -63,8 +62,7 @@ export class ProfiloComponent implements OnInit{
   }
 
   sendToServer(): void {
-    /*
-    this.service.updateUtente(this.emailValue, {
+    this.authService.updateUtente(this.emailValue, {
       nome: this.nomeValue,
       cognome: this.cognomeValue,
       email: this.emailValue,
@@ -72,17 +70,14 @@ export class ProfiloComponent implements OnInit{
       tipologia: this.tipologiaValue,
     }).subscribe({
       next: () => {
-        this.setCookie("nome", this.nomeValue);
-        this.setCookie("cognome", this.cognomeValue);
-        this.setCookie("email", this.emailValue);
-        this.setCookie("password", this.passwordValue);
-        this.setCookie("tipologia", this.tipologiaValue);
+        // Logout: cancella cookie o token
+        this.authService.logout(); // o metodo per rimuovere sessione
+        this.router.navigate(['/login']);
       },
-      complete: () => {
-        this.isEditing = !this.isEditing;
+      error: (err) => {
+        console.error('Errore durante aggiornamento utente:', err);
       }
     });
-    */
   }
 
 }

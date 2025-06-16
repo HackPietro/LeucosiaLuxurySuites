@@ -115,5 +115,28 @@ public class UtenteController {
         return ResponseEntity.ok(Map.of("message", "Logout effettuato con successo"));
     }
 
+    @PutMapping("/doUpdate/{email}")
+    public ResponseEntity<?> aggiornaUtente(@PathVariable String email, @RequestBody UtenteDto nuovoUtenteDto) {
+        System.out.println("Aggiornamento utente con email: " + email);
+        try {
+            // Recupera l'entità originale
+            var utenteOriginale = utenteService.getByEmail(email);  // Metodo che restituisce entità, non DTO
+
+            // Aggiorna solo i campi modificabili
+            utenteOriginale.setNome(nuovoUtenteDto.getNome());
+            utenteOriginale.setCognome(nuovoUtenteDto.getCognome());
+
+            if (!passwordEncoder.matches(nuovoUtenteDto.getPassword(), utenteOriginale.getPassword())) {
+                utenteOriginale.setPassword(passwordEncoder.encode(nuovoUtenteDto.getPassword()));
+            }
+
+            utenteService.save(utenteOriginale.toEntity()); // ora è un update, non insert
+
+            return ResponseEntity.ok(Map.of("message", "Utente aggiornato con successo"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Utente non trovato"));
+        }
+    }
+
 
 }
