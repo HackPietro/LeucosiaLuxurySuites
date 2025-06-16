@@ -1,0 +1,242 @@
+<div class="messages-container">
+  <header class="messages-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-bed"></i>
+        Prenota una Camera
+      </h1>
+      <p class="page-subtitle">Completa i dati per effettuare la prenotazione</p>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn-back" href="/home">
+        <i class="fas fa-arrow-left"></i>
+        Torna Indietro
+      </a>
+    </div>
+  </header>
+
+  <form [formGroup]="prenotazioneForm" (ngSubmit)="onSubmit()" class="booking-form">
+
+    <!-- Sezione Dettagli Prenotazione -->
+    <div class="form-section">
+      <h2 class="section-title">
+        <i class="fas fa-calendar-check"></i>
+        Dettagli Prenotazione
+      </h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="checkIn">Check-in *</label>
+          <input
+            type="date"
+            id="checkIn"
+            formControlName="checkIn"
+            (change)="gestioneCheckInCheckOut()"
+            [class.error]="controlloCampoInvalido(prenotazioneForm, 'checkIn')">
+          <div class="error-message" *ngIf="controlloCampoInvalido(prenotazioneForm, 'checkIn')">
+            {{ errori(prenotazioneForm, 'checkIn') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="checkOut">Check-out *</label>
+          <input
+            type="date"
+            id="checkOut"
+            formControlName="checkOut"
+            [class.error]="controlloCampoInvalido(prenotazioneForm, 'checkOut')">
+          <div class="error-message" *ngIf="controlloCampoInvalido(prenotazioneForm, 'checkOut')">
+            {{ errori(prenotazioneForm, 'checkOut') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="camera">Tipo di Camera *</label>
+          <select
+            id="camera"
+            formControlName="camera">
+            <option *ngFor="let camera of camere" [value]="camera.id">
+              {{ camera.nome }} - €{{ camera.prezzoBase }}/notte
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="richieste">Richieste Speciali</label>
+        <textarea
+          id="richieste"
+          formControlName="richieste"
+          rows="3"
+          placeholder="Eventuali richieste speciali o note per la prenotazione..."></textarea>
+      </div>
+    </div>
+
+    <!-- Sezione Riepilogo Prezzo -->
+    <div class="form-section price-summary" *ngIf="prezzoTotale > 0">
+      <h2 class="section-title">
+        <i class="fas fa-calculator"></i>
+        Riepilogo Prezzo
+      </h2>
+
+      <div class="price-details">
+        <!-- Prezzi giorno per giorno -->
+        <div *ngIf="prezziGiornalieri.length > 0" class="daily-prices">
+          <div class="price-row" *ngFor="let giorno of prezziGiornalieri">
+            <span>{{ giorno.data }}</span>
+            <span class="price">€{{ giorno.prezzo.toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <hr />
+
+        <!-- Riepilogo base -->
+        <div class="price-row">
+          <span>{{ getCameraSelezionata()?.prezzoBase }} x {{ numeroNotti }} notte/i</span>
+          <span class="price">€{{ prezzoBase.toFixed(2) }}</span>
+        </div>
+
+        <div class="price-row" *ngIf="sovrapprezzoContanti > 0">
+          <span>Sovrapprezzo pagamento contanti (+10%)</span>
+          <span class="price">€{{ sovrapprezzoContanti.toFixed(2) }}</span>
+        </div>
+
+        <div class="price-row total">
+          <span><strong>Totale</strong></span>
+          <span class="price"><strong>€{{ prezzoTotale.toFixed(2) }}</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sezione Metodo di Pagamento -->
+    <div class="form-section" *ngIf="prezzoTotale > 0">
+      <h2 class="section-title">
+        <i class="fas fa-credit-card"></i>
+        Metodo di Pagamento
+      </h2>
+
+      <div class="payment-methods">
+        <div class="payment-option">
+          <input
+            type="radio"
+            id="contanti"
+            name="metodoPagamento"
+            value="contanti"
+            [checked]="metodoPagamento === 'contanti'"
+            (change)="cambioMetodoPagamento('contanti')">
+          <label for="contanti" class="payment-label">
+            <i class="fas fa-money-bill-wave"></i>
+            <div>
+              <strong>Pagamento in Contanti</strong>
+              <small>Pagherai al check-in con sovrapprezzo del 10%</small>
+            </div>
+          </label>
+        </div>
+
+        <div class="payment-option">
+          <input
+            type="radio"
+            id="carta"
+            name="metodoPagamento"
+            value="carta"
+            [checked]="metodoPagamento === 'carta'"
+            (change)="cambioMetodoPagamento('carta')">
+          <label for="carta" class="payment-label">
+            <i class="fas fa-credit-card"></i>
+            <div>
+              <strong>Pagamento con Carta</strong>
+              <small>Pagamento sicuro online, nessun sovrapprezzo</small>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Form Dati Carta -->
+      <div class="card-form" *ngIf="metodoPagamento === 'carta'" [formGroup]="pagamentoForm">
+        <h3 class="card-title">
+          <i class="fas fa-lock"></i>
+          Dati Carta di Credito
+        </h3>
+
+        <div class="form-group">
+          <label for="titolare">Titolare della Carta *</label>
+          <input
+            type="text"
+            id="titolare"
+            formControlName="titolare"
+            [class.error]="controlloCampoInvalido(pagamentoForm, 'titolare')"
+            placeholder="Nome e cognome come sulla carta"
+            style="text-transform: uppercase;">
+          <div class="error-message" *ngIf="controlloCampoInvalido(pagamentoForm, 'titolare')">
+            {{ errori(pagamentoForm, 'titolare') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="numeroCartaDisplay">Numero Carta *</label>
+          <input
+            type="text"
+            id="numeroCartaDisplay"
+            formControlName="numeroCartaDisplay"
+            [class.error]="controlloCampoInvalido(pagamentoForm, 'numeroCartaDisplay')"
+            placeholder="1234 5678 9012 3456"
+            (input)="formattazioneNumeroCarta($event)"
+            maxlength="19">
+          <div class="error-message" *ngIf="controlloCampoInvalido(pagamentoForm, 'numeroCartaDisplay')">
+            {{ errori(pagamentoForm, 'numeroCartaDisplay') }}
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="scadenza">Scadenza *</label>
+            <input
+              type="text"
+              id="scadenza"
+              formControlName="scadenza"
+              [class.error]="controlloCampoInvalido(pagamentoForm, 'scadenza')"
+              placeholder="MM/YY"
+              (input)="formatoScandenza($event)"
+              maxlength="5">
+            <div class="error-message" *ngIf="controlloCampoInvalido(pagamentoForm, 'scadenza')">
+              {{ errori(pagamentoForm, 'scadenza') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cvv">CVV *</label>
+            <input
+              type="text"
+              id="cvv"
+              formControlName="cvv"
+              [class.error]="controlloCampoInvalido(pagamentoForm, 'cvv')"
+              placeholder="123"
+              maxlength="4">
+            <div class="error-message" *ngIf="controlloCampoInvalido(pagamentoForm, 'cvv')">
+              {{ errori(pagamentoForm, 'cvv') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="security-notice">
+          <i class="fas fa-shield-alt"></i>
+          I tuoi dati sono protetti con crittografia SSL a 256 bit
+        </div>
+      </div>
+    </div>
+
+    <!-- Pulsante di Invio -->
+    <div class="form-actions" *ngIf="prezzoTotale > 0">
+      <button
+        type="submit"
+        class="btn btn-primary btn-large"
+        [disabled]="prenotazioneForm.invalid || (metodoPagamento === 'carta' && pagamentoForm.invalid)">
+        <i class="fas fa-check"></i>
+        Conferma Prenotazione
+        <span class="btn-price">€{{ prezzoTotale.toFixed(2) }}</span>
+      </button>
+    </div>
+  </form>
+</div>

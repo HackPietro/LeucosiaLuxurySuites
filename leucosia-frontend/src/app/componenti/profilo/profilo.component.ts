@@ -18,6 +18,7 @@ export class ProfiloComponent implements OnInit{
 
   nomeValue: string = '';
   cognomeValue: string = '';
+  telefonoValue: string = '';
   emailValue: string = '';
   passwordValue: string = '';
   tipologiaValue: string = '';
@@ -47,6 +48,7 @@ export class ProfiloComponent implements OnInit{
       const utente = JSON.parse(utenteStr);
       this.nomeValue = utente.nome || '';
       this.cognomeValue = utente.cognome || '';
+      this.telefonoValue = utente.telefono || '';
       this.emailValue = utente.email || '';
       this.tipologiaValue = utente.tipologia || '';
     }
@@ -65,6 +67,7 @@ export class ProfiloComponent implements OnInit{
     this.authService.updateUtente(this.emailValue, {
       nome: this.nomeValue,
       cognome: this.cognomeValue,
+      telefono: this.telefonoValue,
       email: this.emailValue,
       password: this.passwordValue,
       tipologia: this.tipologiaValue,

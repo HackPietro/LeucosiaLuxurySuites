@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { News } from '../Model/News';
 import { Observable } from 'rxjs';
 import {Messaggio} from "../Model/Messaggio";
+import {Camera} from "../Model/Camera";
+import {Prenotazione} from "../Model/Prenotazione";
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +39,21 @@ export class Service {
     return this.http.delete<void>(`${this.baseUrl}/messaggi-api/${id}`, { withCredentials: true });
   }
 
+  getCamere(): Observable<Camera[]> {
+    return this.http.get<Camera[]>(`${this.baseUrl}/camera-api`, { withCredentials: true });
+  }
+
+  getCamereDisponibili(checkIn: string, checkOut: string): Observable<Camera[]> {
+    return this.http.get<Camera[]>(`${this.baseUrl}/camera-api/disponibili?checkIn=${checkIn}&checkOut=${checkOut}`, { withCredentials: true });
+  }
+
+  getPrezziCamera(cameraId: number, start: string, end: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/camera-api/prezzi?cameraId=${cameraId}&start=${start}&end=${end}`, { withCredentials: true });
+  }
+
+  createPrenotazione(prenotazione: Partial<Prenotazione>): Observable<Prenotazione> {
+    alert(`Creazione prenotazione: ${JSON.stringify(prenotazione)}`);
+    return this.http.post<Prenotazione>(`${this.baseUrl}/prenotazione-api`, prenotazione, { withCredentials: true });
+  }
 
 }

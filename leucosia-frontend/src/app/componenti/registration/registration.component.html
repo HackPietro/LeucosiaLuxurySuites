@@ -12,6 +12,7 @@
     <form class="form" (ngSubmit)="onSubmit()" #registrationForm="ngForm">
         <input type="text" name="nome" [(ngModel)]="nome" placeholder="Nome" required (input)="clearError()">
         <input type="text" name="cognome" [(ngModel)]="cognome" placeholder="Cognome" required (input)="clearError()">
+        <input type="text" name="telefono" [(ngModel)]="telefono" placeholder="Telefono" required (input)="clearError()">
         <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required (input)="clearError()">
         <input type="password" name="password" [(ngModel)]="password" placeholder="Password" required (input)="clearError()">
         <button type="submit">Registrati</button>

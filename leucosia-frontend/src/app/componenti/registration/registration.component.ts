@@ -12,8 +12,10 @@ import { Utente } from '../../Model/Utente';
 export class RegistrationComponent {
   nome = '';
   cognome = '';
+  telefono = '';
   email = '';
   password = '';
+  tipologia = 'utente';
   errorMessage = '';
   successMessage = '';
 
@@ -38,8 +40,10 @@ export class RegistrationComponent {
     const utente: Utente = {
       nome: this.nome,
       cognome: this.cognome,
+      telefono: this.telefono,
       email: this.email,
-      password: this.password
+      password: this.password,
+      tipologia: this.tipologia,
     };
 
     this.authService.doRegistration(utente).subscribe({

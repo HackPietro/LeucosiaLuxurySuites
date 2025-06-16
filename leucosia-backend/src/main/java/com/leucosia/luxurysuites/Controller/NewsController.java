@@ -21,20 +21,17 @@ public class NewsController {
 
     @GetMapping
     public List<NewsDto> getAllNews() {
-        System.out.println("Prendiamo tutte le news");
         return newsService.getAllNews();
     }
 
     @PostMapping
     public NewsDto createNews(@RequestBody NewsDto newsDto) {
-        System.out.println("Creazione di una nuova news");
         return newsService.createNews(newsDto);
     }
 
 
     @DeleteMapping("/{id}")
     public void deleteNews(@PathVariable Long id) {
-        System.out.println("Eliminazione della news con id: " + id);
         newsService.deleteNews(id);
     }
 

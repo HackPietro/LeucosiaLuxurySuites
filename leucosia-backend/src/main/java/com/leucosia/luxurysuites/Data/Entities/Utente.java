@@ -33,4 +33,7 @@ public class Utente {
 
     @Column(name = "tipologia")
     private String tipologia = "utente";
+
+    @Column(name = "telefono")
+    private String telefono;
 }

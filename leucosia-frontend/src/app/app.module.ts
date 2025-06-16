@@ -31,6 +31,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NewsComponent} from "./componenti/news/news.component";
 import {Richiedi_interventoComponent} from "./componenti/richiedi_intervento/richiedi_intervento.component";
 import {Gestione_messaggiComponent} from "./componenti/gestione_messaggi/gestione_messaggi.component";
+import {PrenotazioneComponent} from "./componenti/prenotazione/prenotazione.component";
 
 
 registerLocaleData(localeIt);
@@ -44,6 +45,7 @@ registerLocaleData(localeIt);
     NewsComponent,
     Richiedi_interventoComponent,
     Gestione_messaggiComponent,
+    PrenotazioneComponent,
   ],
   imports: [
     BrowserModule,

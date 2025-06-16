@@ -1,7 +1,6 @@
 package com.leucosia.luxurysuites.Dto;
 
 import com.leucosia.luxurysuites.Data.Entities.Messaggi;
-import com.leucosia.luxurysuites.Data.Entities.News;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

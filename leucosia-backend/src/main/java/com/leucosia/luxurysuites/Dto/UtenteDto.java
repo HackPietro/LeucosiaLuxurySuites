@@ -14,13 +14,15 @@ public class UtenteDto {
     private String nome;
     private String cognome;
     private String tipologia;
+    private String telefono;
 
-    public UtenteDto(String email, String password, String nome, String cognome, String tipologia) {
+    public UtenteDto(String email, String password, String nome, String cognome, String tipologia, String telefono) {
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
         this.password = password;
         this.tipologia = tipologia;
+        this.telefono = telefono;
     }
 
     public Utente toEntity() {
@@ -33,6 +35,7 @@ public class UtenteDto {
         credenziali.setPassword(this.password);
         utente.setCredenziali(credenziali);
         utente.setTipologia(this.tipologia);
+        utente.setTelefono(this.telefono);
 
         return utente;
     }

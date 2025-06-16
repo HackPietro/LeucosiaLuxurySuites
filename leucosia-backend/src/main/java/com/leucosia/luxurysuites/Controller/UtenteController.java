@@ -125,6 +125,7 @@ public class UtenteController {
             // Aggiorna solo i campi modificabili
             utenteOriginale.setNome(nuovoUtenteDto.getNome());
             utenteOriginale.setCognome(nuovoUtenteDto.getCognome());
+            utenteOriginale.setTelefono(nuovoUtenteDto.getTelefono());
 
             if (!passwordEncoder.matches(nuovoUtenteDto.getPassword(), utenteOriginale.getPassword())) {
                 utenteOriginale.setPassword(passwordEncoder.encode(nuovoUtenteDto.getPassword()));

@@ -4,5 +4,6 @@ export interface Utente {
   email: string;
   password: string;
   tipologia?: string;
+  telefono: string;
 }
 
