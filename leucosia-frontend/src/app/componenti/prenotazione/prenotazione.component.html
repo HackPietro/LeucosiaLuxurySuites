@@ -98,9 +98,9 @@
           <span class="price">€{{ prezzoBase.toFixed(2) }}</span>
         </div>
 
-        <div class="price-row" *ngIf="sovrapprezzoContanti > 0">
-          <span>Sovrapprezzo pagamento contanti (+10%)</span>
-          <span class="price">€{{ sovrapprezzoContanti.toFixed(2) }}</span>
+        <div class="price-row" *ngIf="sovrapprezzoSpese > 0">
+          <span>Sovrapprezzo spese</span>
+          <span class="price">€{{ sovrapprezzoSpese.toFixed(2) }}</span>
         </div>
 
         <div class="price-row total">
@@ -122,117 +122,22 @@
           <input
             type="radio"
             id="contanti"
-            name="metodoPagamento"
-            value="contanti"
-            [checked]="metodoPagamento === 'contanti'"
-            (change)="cambioMetodoPagamento('contanti')">
+            formControlName="metodoPagamento"
+            value="contanti">
           <label for="contanti" class="payment-label">
             <i class="fas fa-money-bill-wave"></i>
             <div>
               <strong>Pagamento in Contanti</strong>
-              <small>Pagherai al check-in con sovrapprezzo del 10%</small>
+              <small>Pagherai al check-in presso la struttura</small>
             </div>
           </label>
-        </div>
-
-        <div class="payment-option">
-          <input
-            type="radio"
-            id="carta"
-            name="metodoPagamento"
-            value="carta"
-            [checked]="metodoPagamento === 'carta'"
-            (change)="cambioMetodoPagamento('carta')">
-          <label for="carta" class="payment-label">
-            <i class="fas fa-credit-card"></i>
-            <div>
-              <strong>Pagamento con Carta</strong>
-              <small>Pagamento sicuro online, nessun sovrapprezzo</small>
-            </div>
-          </label>
-        </div>
-      </div>
-
-      <!-- Form Dati Carta -->
-      <div class="card-form" *ngIf="metodoPagamento === 'carta'" [formGroup]="pagamentoForm">
-        <h3 class="card-title">
-          <i class="fas fa-lock"></i>
-          Dati Carta di Credito
-        </h3>
-
-        <div class="form-group">
-          <label for="titolare">Titolare della Carta *</label>
-          <input
-            type="text"
-            id="titolare"
-            formControlName="titolare"
-            [class.error]="controlloCampoInvalido(pagamentoForm, 'titolare')"
-            placeholder="Nome e cognome come sulla carta"
-            style="text-transform: uppercase;">
-          <div class="error-message" *ngIf="controlloCampoInvalido(pagamentoForm, 'titolare')">
-            {{ errori(pagamentoForm, 'titolare') }}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="numeroCartaDisplay">Numero Carta *</label>
-          <input
-            type="text"
-            id="numeroCartaDisplay"
-            formControlName="numeroCartaDisplay"
-            [class.error]="controlloCampoInvalido(pagamentoForm, 'numeroCartaDisplay')"
-            placeholder="1234 5678 9012 3456"
-            (input)="formattazioneNumeroCarta($event)"
-            maxlength="19">
-          <div class="error-message" *ngIf="controlloCampoInvalido(pagamentoForm, 'numeroCartaDisplay')">
-            {{ errori(pagamentoForm, 'numeroCartaDisplay') }}
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="scadenza">Scadenza *</label>
-            <input
-              type="text"
-              id="scadenza"
-              formControlName="scadenza"
-              [class.error]="controlloCampoInvalido(pagamentoForm, 'scadenza')"
-              placeholder="MM/YY"
-              (input)="formatoScandenza($event)"
-              maxlength="5">
-            <div class="error-message" *ngIf="controlloCampoInvalido(pagamentoForm, 'scadenza')">
-              {{ errori(pagamentoForm, 'scadenza') }}
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="cvv">CVV *</label>
-            <input
-              type="text"
-              id="cvv"
-              formControlName="cvv"
-              [class.error]="controlloCampoInvalido(pagamentoForm, 'cvv')"
-              placeholder="123"
-              maxlength="4">
-            <div class="error-message" *ngIf="controlloCampoInvalido(pagamentoForm, 'cvv')">
-              {{ errori(pagamentoForm, 'cvv') }}
-            </div>
-          </div>
-        </div>
-
-        <div class="security-notice">
-          <i class="fas fa-shield-alt"></i>
-          I tuoi dati sono protetti con crittografia SSL a 256 bit
         </div>
       </div>
     </div>
 
     <!-- Pulsante di Invio -->
     <div class="form-actions" *ngIf="prezzoTotale > 0">
-      <button
-        type="submit"
-        class="btn btn-primary btn-large"
-        [disabled]="prenotazioneForm.invalid || (metodoPagamento === 'carta' && pagamentoForm.invalid)">
+      <button type="submit" class="btn btn-primary btn-large">
         <i class="fas fa-check"></i>
         Conferma Prenotazione
         <span class="btn-price">€{{ prezzoTotale.toFixed(2) }}</span>
@@ -240,3 +145,6 @@
     </div>
   </form>
 </div>
+
+
+

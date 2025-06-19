@@ -8,6 +8,7 @@ import com.leucosia.luxurysuites.Data.Entities.News;
 import com.leucosia.luxurysuites.Data.Entities.Prenotazione;
 import com.leucosia.luxurysuites.Data.Entities.Utente;
 import com.leucosia.luxurysuites.Dto.PrenotazioneDto;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class PrenotazioneServiceImpl implements PrenotazioneService {
     }
 
     @Override
+    @Transactional
     public PrenotazioneDto createPrenotazione(PrenotazioneDto dto) {
         if (dto == null) {
             throw new IllegalArgumentException("PrenotazioneDto non può essere null");

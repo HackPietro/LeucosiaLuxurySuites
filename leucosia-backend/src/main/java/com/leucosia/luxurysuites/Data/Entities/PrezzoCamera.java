@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name="prezzo_camera")
 public class PrezzoCamera {
 
     @Id

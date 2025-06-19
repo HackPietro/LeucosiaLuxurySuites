@@ -40,15 +40,15 @@ export class Service {
   }
 
   getCamere(): Observable<Camera[]> {
-    return this.http.get<Camera[]>(`${this.baseUrl}/camera-api`, { withCredentials: true });
+    return this.http.get<Camera[]>(`${this.baseUrl}/camera-api`);
   }
 
   getCamereDisponibili(checkIn: string, checkOut: string): Observable<Camera[]> {
-    return this.http.get<Camera[]>(`${this.baseUrl}/camera-api/disponibili?checkIn=${checkIn}&checkOut=${checkOut}`, { withCredentials: true });
+    return this.http.get<Camera[]>(`${this.baseUrl}/camera-api/disponibili?checkIn=${checkIn}&checkOut=${checkOut}`);
   }
 
   getPrezziCamera(cameraId: number, start: string, end: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/camera-api/prezzi?cameraId=${cameraId}&start=${start}&end=${end}`, { withCredentials: true });
+    return this.http.get<any[]>(`${this.baseUrl}/camera-api/prezzi?cameraId=${cameraId}&start=${start}&end=${end}`);
   }
 
   createPrenotazione(prenotazione: Partial<Prenotazione>): Observable<Prenotazione> {

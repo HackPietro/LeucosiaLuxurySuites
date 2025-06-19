@@ -21,13 +21,16 @@ export class Gestione_messaggiComponent implements OnInit {
     this.errorMessage = '';
     this.service.getMessaggi().subscribe({
       next: (data) => {
-        this.messaggi = data;
+        this.messaggi = data.sort((a, b) =>
+          new Date(b.data).getTime() - new Date(a.data).getTime()
+        );
       },
       error: (err) => {
         this.errorMessage = 'Errore nel caricamento dei messaggi.';
       }
     });
   }
+
 
   eliminaMessaggio(id: number): void {
     if (confirm('Sei sicuro di voler eliminare questo messaggio?')) {

@@ -34,6 +34,7 @@ export class AuthService {
       })
     );
   }
+
   validateToken(): Observable<boolean> {
     return this.http.post<{ valid: boolean }>(`${this.baseUrl}/validateToken`, {}, {
       withCredentials: true

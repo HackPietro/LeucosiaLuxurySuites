@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Data
 @NoArgsConstructor
+@Table(name = "prenotazione")
 public class Prenotazione {
 
     @Id

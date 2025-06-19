@@ -22,6 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
 
     private static final String[] PATH_WHITELIST = {
+            "/camera-api",
+            "/camera-api/disponibili",
+            "/camera-api/prezzi",
             "/utente-api/doLogin",  // POST per processare il login
             "/utente-api/doRegistration",  // POST per processare la registration
             "/styles/**",  // CSS
