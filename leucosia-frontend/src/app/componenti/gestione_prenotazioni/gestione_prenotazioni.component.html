@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestione Prenotazioni</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="bookings-container">
+  <!-- Header -->
+  <header class="bookings-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-calendar-check"></i>
+        Gestione Prenotazioni
+      </h1>
+      <p class="page-subtitle" id="pageSubtitle">Visualizza e gestisci le tue prenotazioni</p>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn-primary" href="/gestione_prenotazioni">
+        <i class="fas fa-sync-alt"></i>
+        Aggiorna
+      </a>
+    </div>
+  </header>
+
+  <div class="bookings-list" id="bookingsList">
+    <div *ngIf="prenotazioni.length === 0" class="no-bookings">
+      <i class="fas fa-calendar-times"></i>
+      <h3>Nessuna prenotazione trovata.</h3>
+    </div>
+
+    <div *ngFor="let p of prenotazioni" class="booking-card" >
+      <div class="booking-header">
+        <div class="booking-info">
+          <div class="booking-guest">Prenotazione #{{ p.id }}</div>
+          <div class="booking-meta">
+            <span><i class="fas fa-sign-in-alt"></i> Check-in: {{ p.dataCheckIn | date:'dd/MM/yyyy' }}</span>
+            <span><i class="fas fa-sign-out-alt"></i> Check-out: {{ p.dataCheckOut | date:'dd/MM/yyyy' }}</span>
+            <span><i class="fas fa-bed"></i> Camera: {{ p.cameraId }}</span>
+            <span><i class="fas fa-euro-sign"></i> Totale: {{ p.totale | currency:'EUR' }}</span>
+          </div>
+        </div>
+
+        <div class="booking-actions">
+          <!-- Pulsante elimina -->
+          <button class="btn-delete" (click)="eliminaPrenotazione(p.id!)">
+            <i class="fas fa-trash"></i> Elimina
+          </button>
+
+          <!-- Popup hover per admin -->
+          <div *ngIf="utente?.tipologia === 'admin' " class="admin-popup-container">
+            <i class="fas fa-user-circle info-icon"></i>
+            <div class="admin-popup">
+              <strong>ID Utente:</strong> {{ p.utenteId }}<br>
+              <strong>Email:</strong> {{ p.totale || 'N/A' }}<br>
+              <strong>Nome:</strong> {{ p.totale || 'N/A' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Torna Indietro -->
+  <div class="back-to-home">
+    <a href="#" class="btn btn-back" onclick="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      Torna Indietro
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

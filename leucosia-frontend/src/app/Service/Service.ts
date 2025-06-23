@@ -56,4 +56,16 @@ export class Service {
     return this.http.post<Prenotazione>(`${this.baseUrl}/prenotazione-api`, prenotazione, { withCredentials: true });
   }
 
+  getPrenotazioni(): Observable<Prenotazione[]> {
+    return this.http.get<Prenotazione[]>(`${this.baseUrl}/prenotazione-api`, { withCredentials: true });
+  }
+
+  getPrenotazioniUtente(utenteId: number): Observable<Prenotazione[]> {
+    return this.http.get<Prenotazione[]>(`${this.baseUrl}/prenotazione-api/utente/${utenteId}`, { withCredentials: true });
+  }
+
+  eliminaPrenotazione(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/prenotazione-api/${id}`, { withCredentials: true });
+  }
+
 }

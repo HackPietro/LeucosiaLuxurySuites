@@ -3,7 +3,7 @@ import { Service } from '../../Service/Service';
 import { Messaggio } from '../../Model/Messaggio';
 
 @Component({
-  selector: 'app-news',
+  selector: 'app-gestione_messaggi',
   templateUrl: './gestione_messaggi.component.html',
   styleUrls: ['./gestione_messaggi.component.css']
 })

@@ -97,7 +97,7 @@
 
         <!-- Pulsante elimina (solo admin) -->
         <div *ngIf="utenteOrAdmin() === 'admin'" class="news-actions">
-          <button class="btn-delete" (click)="newsItem.id !== undefined && eliminaNews(newsItem.id)" title="Elimina news">
+          <button class="btn-delete" (click)="newsItem.id !== undefined && eliminaNews(newsItem.id!)" title="Elimina news">
             <i class="fas fa-trash"></i>
           </button>
         </div>

@@ -17,4 +17,6 @@ public interface PrenotazioneDao extends JpaRepository<Prenotazione, Long> {
             "WHERE p.dataCheckIn < :checkOut AND p.dataCheckOut > :checkIn)")
     List<Camera> findCamereDisponibili(LocalDate checkIn, LocalDate checkOut);
 
+    List<Prenotazione> findByUtenteId(Long utenteId);
+
 }

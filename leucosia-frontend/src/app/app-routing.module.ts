@@ -8,6 +8,7 @@ import {NewsComponent} from "./componenti/news/news.component";
 import {Gestione_messaggiComponent} from "./componenti/gestione_messaggi/gestione_messaggi.component";
 import {Richiedi_interventoComponent} from "./componenti/richiedi_intervento/richiedi_intervento.component";
 import {PrenotazioneComponent} from "./componenti/prenotazione/prenotazione.component";
+import {Gestione_prenotazioniComponent} from "./componenti/gestione_prenotazioni/gestione_prenotazioni.component";
 
 
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
     ],
   },
+  { path: 'gestione_prenotazioni', component: Gestione_prenotazioniComponent },
   { path: 'prenotazione', component: PrenotazioneComponent },
   { path: 'richiedi_intervento', component: Richiedi_interventoComponent },
   { path: 'gestione_messaggi', component: Gestione_messaggiComponent },

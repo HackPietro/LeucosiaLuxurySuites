@@ -33,6 +33,7 @@ import {Richiedi_interventoComponent} from "./componenti/richiedi_intervento/ric
 import {Gestione_messaggiComponent} from "./componenti/gestione_messaggi/gestione_messaggi.component";
 import {PrenotazioneComponent} from "./componenti/prenotazione/prenotazione.component";
 import {FooterComponent} from "./componenti/footer/footer.component";
+import {Gestione_prenotazioniComponent} from "./componenti/gestione_prenotazioni/gestione_prenotazioni.component";
 
 
 registerLocaleData(localeIt);
@@ -48,6 +49,7 @@ registerLocaleData(localeIt);
     Gestione_messaggiComponent,
     PrenotazioneComponent,
     FooterComponent,
+    Gestione_prenotazioniComponent,
   ],
   imports: [
     BrowserModule,

@@ -12,6 +12,9 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class PrenotazioneServiceImpl implements PrenotazioneService {
@@ -74,6 +77,37 @@ public class PrenotazioneServiceImpl implements PrenotazioneService {
                 salvata.getCamera().getId(),
                 salvata.getTotale()
         );
+    }
+
+    @Override
+    public List<PrenotazioneDto> getPrenotazioni() {
+        System.out.println("Recupero tutte le prenotazioni");
+        return prenotazioneDao.findAll()
+                .stream()
+                .map(prenotazione -> modelMapper.map(prenotazione, PrenotazioneDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PrenotazioneDto> getPrenotazioniByUtenteId(Long id) {
+        System.out.println("Recupero prenotazioni per utente con ID: " + id);
+        if (id == null) {
+            throw new IllegalArgumentException("L'id dell'utente non può essere null");
+        }
+
+        return prenotazioneDao.findByUtenteId(id)
+                .stream()
+                .map(prenotazione -> modelMapper.map(prenotazione, PrenotazioneDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void eliminaPrenotazione(Long id) {
+        System.out.println("Eliminazione prenotazione con ID: " + id);
+        if (id == null) {
+            throw new IllegalArgumentException("L'id della prenotazione non può essere null");
+        }
+        prenotazioneDao.deleteById(id);
     }
 
 }
