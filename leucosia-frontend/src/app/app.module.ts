@@ -32,6 +32,7 @@ import {NewsComponent} from "./componenti/news/news.component";
 import {Richiedi_interventoComponent} from "./componenti/richiedi_intervento/richiedi_intervento.component";
 import {Gestione_messaggiComponent} from "./componenti/gestione_messaggi/gestione_messaggi.component";
 import {PrenotazioneComponent} from "./componenti/prenotazione/prenotazione.component";
+import {FooterComponent} from "./componenti/footer/footer.component";
 
 
 registerLocaleData(localeIt);
@@ -46,6 +47,7 @@ registerLocaleData(localeIt);
     Richiedi_interventoComponent,
     Gestione_messaggiComponent,
     PrenotazioneComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

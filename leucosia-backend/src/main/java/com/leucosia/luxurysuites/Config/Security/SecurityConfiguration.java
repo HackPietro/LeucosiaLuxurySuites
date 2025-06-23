@@ -25,11 +25,11 @@ public class SecurityConfiguration {
             "/camera-api",
             "/camera-api/disponibili",
             "/camera-api/prezzi",
-            "/utente-api/doLogin",  // POST per processare il login
-            "/utente-api/doRegistration",  // POST per processare la registration
-            "/styles/**",  // CSS
-            "/js/**",  // JS
-            "/images/**",  // Immagini
+            "/utente-api/doLogin",
+            "/utente-api/doRegistration",
+            "/styles/**",
+            "/js/**",
+            "/images/**",
             "/error"
     };
 
