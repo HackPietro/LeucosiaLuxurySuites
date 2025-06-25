@@ -50,12 +50,19 @@
           </button>
 
           <!-- Popup hover per admin -->
-          <div *ngIf="utente?.tipologia === 'admin' " class="admin-popup-container">
+          <div *ngIf="utente?.tipologia === 'admin'" class="admin-popup-container">
             <i class="fas fa-user-circle info-icon"></i>
             <div class="admin-popup">
-              <strong>ID Utente:</strong> {{ p.utenteId }}<br>
-              <strong>Email:</strong> {{ p.totale || 'N/A' }}<br>
-              <strong>Nome:</strong> {{ p.totale || 'N/A' }}
+              <ng-container *ngIf="getUtenteById(p.utenteId) as user">
+                <strong>ID Utente:</strong> {{ p.utenteId }}<br>
+                <strong>Nome:</strong> {{ user.nome || 'N/A' }}<br>
+                <strong>Cognome:</strong> {{ user.cognome || 'N/A' }}<br>
+                <strong>Telefono:</strong> {{ user.telefono || 'N/A' }}<br>
+                <strong>Email:</strong> {{ user.email || 'N/A' }}<br>
+              </ng-container>
+              <ng-container *ngIf="!getUtenteById(p.utenteId)">
+                <em>Caricamento dati utente...</em>
+              </ng-container>
             </div>
           </div>
         </div>

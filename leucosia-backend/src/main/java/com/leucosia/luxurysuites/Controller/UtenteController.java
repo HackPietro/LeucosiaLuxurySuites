@@ -139,5 +139,15 @@ public class UtenteController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UtenteDto> getUtenteById(@PathVariable Long id) {
+        try {
+            UtenteDto utente = utenteService.getById(id);
+            return ResponseEntity.ok(utente);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
 
 }

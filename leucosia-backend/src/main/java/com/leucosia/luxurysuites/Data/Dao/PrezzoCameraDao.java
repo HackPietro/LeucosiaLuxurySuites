@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface PrezzoCameraDao extends JpaRepository<PrezzoCamera, Long> {
     List<PrezzoCamera> findByCameraAndDataBetween(Camera camera, LocalDate start, LocalDate end);
+    void deleteByCameraAndData(Camera camera, LocalDate data);
+
 }

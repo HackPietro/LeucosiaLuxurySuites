@@ -10,6 +10,8 @@ import {Utente} from "../../Model/Utente";
 export class Gestione_prenotazioniComponent implements OnInit {
   prenotazioni: Prenotazione[] = [];
   utente: Utente | null = null;
+  datiUtenti: { [id: number]: Utente } = {};
+
 
   constructor(private service: Service){}
   ngOnInit() {
@@ -21,6 +23,7 @@ export class Gestione_prenotazioniComponent implements OnInit {
     if (this.utente?.tipologia === 'admin') {
       this.service.getPrenotazioni().subscribe((res: Prenotazione[]) => {
         this.prenotazioni = this.ordinaPrenotazioni(res);
+        this.caricaUtentiAssociati(this.prenotazioni);
       });
     } else {
       this.service.getPrenotazioniUtente(this.utente?.id!).subscribe((res: Prenotazione[]) => {
@@ -28,6 +31,19 @@ export class Gestione_prenotazioniComponent implements OnInit {
       });
     }
   }
+
+  caricaUtentiAssociati(prenotazioni: Prenotazione[]) {
+    const idsUnici = Array.from(new Set(prenotazioni.map(p => p.utenteId)));
+
+    idsUnici.forEach(id => {
+      if (!this.datiUtenti[id]) {
+        this.service.getUtenteById(id).subscribe((utente: Utente) => {
+          this.datiUtenti[id] = utente;
+        });
+      }
+    });
+  }
+
 
   eliminaPrenotazione(id: number) {
     if (confirm('Sei sicuro di voler eliminare questa prenotazione?')) {
@@ -49,5 +65,10 @@ export class Gestione_prenotazioniComponent implements OnInit {
       new Date(a.dataCheckIn).getTime() - new Date(b.dataCheckIn).getTime()
     );
   }
+
+  public getUtenteById(id: number): Utente | null {
+    return this.datiUtenti[id] || null;
+  }
+
 
 }

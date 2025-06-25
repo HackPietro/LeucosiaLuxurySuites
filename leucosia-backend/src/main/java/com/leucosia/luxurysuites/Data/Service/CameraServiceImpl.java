@@ -6,6 +6,8 @@ import com.leucosia.luxurysuites.Data.Dao.PrenotazioneDao;
 import com.leucosia.luxurysuites.Data.Entities.Camera;
 import com.leucosia.luxurysuites.Data.Entities.PrezzoCamera;
 import com.leucosia.luxurysuites.Dto.CameraDto;
+import com.leucosia.luxurysuites.Dto.PrezzoCameraDto;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,29 @@ public class CameraServiceImpl implements CameraService {
                 new IllegalArgumentException("Camera non trovata con ID: " + cameraId)
         );
         return prezzoCameraDao.findByCameraAndDataBetween(camera, start, end);
+    }
+
+    @Override
+    @Transactional
+    public void aggiungiPrezzoCamera(PrezzoCameraDto dto) {
+        Camera camera = cameraDao.findById(dto.getCameraId())
+                .orElseThrow(() -> new RuntimeException("Camera non trovata"));
+
+        LocalDate currentDate = dto.getDataInizio();
+        while (!currentDate.isAfter(dto.getDataFine())) {
+
+            // 1. Cancella eventuale record esistente per quella camera e data
+            prezzoCameraDao.deleteByCameraAndData(camera, currentDate);
+
+            // 2. Crea nuovo record aggiornato
+            PrezzoCamera nuovoPrezzo = new PrezzoCamera();
+            nuovoPrezzo.setCamera(camera);
+            nuovoPrezzo.setData(currentDate);
+            nuovoPrezzo.setPrezzo(dto.getPrezzo());
+            prezzoCameraDao.save(nuovoPrezzo);
+
+            currentDate = currentDate.plusDays(1);
+        }
     }
 
 }

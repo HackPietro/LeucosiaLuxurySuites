@@ -1,0 +1,185 @@
+<div class="messages-container">
+  <header class="messages-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-cogs"></i>
+        Gestione Camere
+      </h1>
+      <p class="page-subtitle">Modifica prezzi e disponibilità delle camere</p>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn-back" href="/">
+        <i class="fas fa-arrow-left"></i>
+        Torna Indietro
+      </a>
+    </div>
+  </header>
+
+  <form [formGroup]="gestioneForm" (ngSubmit)="onSubmit()" class="booking-form">
+
+    <!-- Sezione Selezione Camera e Periodo -->
+    <div class="form-section">
+      <h2 class="section-title">
+        <i class="fas fa-calendar-alt"></i>
+        Selezione Camera e Periodo
+      </h2>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="camera">Camera *</label>
+          <select
+            id="camera"
+            formControlName="camera"
+            [class.error]="controlloCampoInvalido(gestioneForm, 'camera')">
+            <option value="">Seleziona una camera</option>
+            <option *ngFor="let camera of camere" [value]="camera.id">
+              {{ camera.nome }} - €{{ camera.prezzoBase }}/notte
+            </option>
+          </select>
+          <div class="error-message" *ngIf="controlloCampoInvalido(gestioneForm, 'camera')">
+            {{ errori(gestioneForm, 'camera') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dataInizio">Data Inizio *</label>
+          <input
+            type="date"
+            id="dataInizio"
+            formControlName="dataInizio"
+            (change)="gestioneDataInizio()"
+            [class.error]="controlloCampoInvalido(gestioneForm, 'dataInizio')">
+          <div class="error-message" *ngIf="controlloCampoInvalido(gestioneForm, 'dataInizio')">
+            {{ errori(gestioneForm, 'dataInizio') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dataFine">Data Fine *</label>
+          <input
+            type="date"
+            id="dataFine"
+            formControlName="dataFine"
+            [class.error]="controlloCampoInvalido(gestioneForm, 'dataFine')">
+          <div class="error-message" *ngIf="controlloCampoInvalido(gestioneForm, 'dataFine')">
+            {{ errori(gestioneForm, 'dataFine') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sezione Tipo Operazione -->
+    <div class="form-section" *ngIf="prezziGiornalieri.length > 0">
+      <h2 class="section-title">
+        <i class="fas fa-tasks"></i>
+        Tipo di Operazione
+      </h2>
+
+      <div class="operation-methods">
+        <div class="operation-option">
+          <input
+            type="radio"
+            id="operazionePrezzo"
+            formControlName="tipoOperazione"
+            value="prezzo">
+          <label for="operazionePrezzo" class="operation-label">
+            <i class="fas fa-euro-sign"></i>
+            <div>
+              <strong>Modifica Prezzo</strong>
+              <small>Cambia il prezzo per il periodo selezionato</small>
+            </div>
+          </label>
+        </div>
+
+        <div class="operation-option">
+          <input
+            type="radio"
+            id="operazioneOccupazione"
+            formControlName="tipoOperazione"
+            value="occupazione">
+          <label for="operazioneOccupazione" class="operation-label">
+            <i class="fas fa-ban"></i>
+            <div>
+              <strong>Occupa Camera</strong>
+              <small>Rendi la camera non disponibile per il periodo</small>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Form per modifica prezzo -->
+      <div class="operation-form" *ngIf="tipoOperazione === 'prezzo'">
+        <div class="form-group">
+          <label for="nuovoPrezzo">Nuovo Prezzo per Notte *</label>
+          <div class="price-input-container">
+            <span class="currency-symbol">€</span>
+            <input
+              type="number"
+              id="nuovoPrezzo"
+              formControlName="nuovoPrezzo"
+              step="0.01"
+              min="0"
+              placeholder="0.00"
+              [class.error]="controlloCampoInvalido(gestioneForm, 'nuovoPrezzo')">
+          </div>
+          <div class="error-message" *ngIf="controlloCampoInvalido(gestioneForm, 'nuovoPrezzo')">
+            {{ errori(gestioneForm, 'nuovoPrezzo') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sezione Riepilogo Prezzi Attuali -->
+    <div class="form-section price-summary" *ngIf="prezziGiornalieri.length > 0">
+      <h2 class="section-title">
+        <i class="fas fa-list"></i>
+        Prezzi Attuali - {{ getCameraSelezionata()?.nome }}
+      </h2>
+
+      <div class="price-details">
+        <!-- Prezzi giorno per giorno -->
+        <div class="daily-prices">
+          <div class="price-row" *ngFor="let giorno of prezziGiornalieri">
+            <span>{{ giorno.data | date:'dd/MM/yyyy' }}</span>
+            <span class="price">€{{ giorno.prezzo.toFixed(2) }}</span>
+          </div>
+        </div>
+
+        <hr />
+
+        <!-- Riepilogo periodo -->
+        <div class="price-row">
+          <span><strong>Periodo: {{ numeroNotti }} notte/i</strong></span>
+          <span class="price">
+            <strong>
+              <span *ngIf="tipoOperazione === 'prezzo' && gestioneForm.get('nuovoPrezzo')?.value > 0">
+                €{{ (gestioneForm.get('nuovoPrezzo')?.value * numeroNotti).toFixed(2) }} (nuovo totale)
+              </span>
+              <span *ngIf="tipoOperazione === 'occupazione'">
+                Camera sarà occupata
+              </span>
+            </strong>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pulsante di Invio -->
+    <div class="form-actions" *ngIf="prezziGiornalieri.length > 0">
+      <button type="submit" class="btn btn-primary btn-large">
+        <i class="fas fa-check" *ngIf="tipoOperazione === 'prezzo'"></i>
+        <i class="fas fa-ban" *ngIf="tipoOperazione === 'occupazione'"></i>
+        <span *ngIf="tipoOperazione === 'prezzo'">
+          Aggiorna Prezzi
+        </span>
+        <span *ngIf="tipoOperazione === 'occupazione'">
+          Occupa Camera
+        </span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<app-footer></app-footer>

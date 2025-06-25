@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../Service/AuthService';
+import { Service } from '../../Service/Service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,8 +11,9 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
 
   showMenu: boolean = false;
+  showRecensionePopup: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private service: Service) {}
 
   ngOnInit(): void {
     this.authService.validateToken().subscribe(isAuth => {
@@ -36,5 +38,25 @@ export class HomeComponent implements OnInit {
       }
     }
     return '';
+  }
+
+  openRecensionePopup(): void {
+    this.showRecensionePopup = true;
+  }
+
+  closeRecensionePopup(): void {
+    this.showRecensionePopup = false;
+  }
+
+  onSubmitReview(event: { stelle: number, commento: string, utenteId: number}): void {
+    const { stelle, commento, utenteId } = event;
+    this.service.addRecensione(stelle, commento, utenteId).subscribe({
+      next: () => {
+        alert('Grazie per la tua recensione!');
+      },
+      error: (err) => {
+        alert('Si è verificato un errore. Riprova più tardi.');
+      }
+    });
   }
 }

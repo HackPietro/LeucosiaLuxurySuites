@@ -68,4 +68,25 @@ export class Service {
     return this.http.delete<void>(`${this.baseUrl}/prenotazione-api/${id}`, { withCredentials: true });
   }
 
+  getUtenteById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/utente-api/${id}`, { withCredentials: true });
+  }
+
+  //ho aggiunto any dopo post, vedere se restituisce ancora errore e cambia lo stesso i prezzi
+  addPrezzoCamera(cameraId: number, prezzo: number, dataInizio: string, dataFine: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/camera-api/modificaPrezzi`, {
+      cameraId,
+      prezzo,
+      dataInizio,
+      dataFine
+    }, {
+      withCredentials: true
+    });
+  }
+
+  addRecensione(stelle: number, commento: string, utenteId: number): Observable<any> {
+    alert("ciao");
+    return this.http.post<any>(`${this.baseUrl}/recensione-api`, {stelle, commento, utenteId}, { withCredentials: true });
+  }
+
 }

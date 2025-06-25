@@ -1,0 +1,45 @@
+<div class="popup-overlay" *ngIf="isVisible" (click)="onClose()">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <h3>Lascia una Recensione</h3>
+      <button class="close-btn" (click)="onClose()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="popup-content">
+      <div class="rating-section">
+        <p>Come valuti la tua esperienza?</p>
+        <div class="stars-container">
+          <i
+            *ngFor="let star of [1,2,3,4,5]"
+            class="fas fa-star star"
+            [class.active]="star <= stelle"
+            (click)="setStelle(star)"
+          ></i>
+        </div>
+      </div>
+
+      <div class="comment-section">
+        <label for="comment">Il tuo commento:</label>
+        <textarea
+          id="comment"
+          [(ngModel)]="commento"
+          placeholder="Condividi la tua esperienza con noi..."
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="popup-actions">
+        <button class="btn-cancel" (click)="onClose()">Annulla</button>
+        <button
+          class="btn-submit"
+          (click)="onSubmit()"
+          [disabled]="stelle === 0"
+        >
+          Invia Recensione
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

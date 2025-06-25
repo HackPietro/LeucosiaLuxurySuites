@@ -45,7 +45,7 @@
           <span> Profilo </span>
         </button>
 
-        <button *ngIf="utenteOrAdmin() === 'admin'" mat-menu-item routerLink="/camere">
+        <button *ngIf="utenteOrAdmin() === 'admin'" mat-menu-item routerLink="/gestione_camere">
           <i class="fas fa-bed menu-icon"></i>
           <span> Gestione Camere </span>
         </button>
@@ -65,6 +65,11 @@
           <i class="fas fa-tools menu-icon"></i>
           <span *ngIf="utenteOrAdmin() === 'admin'; else interventoUser"> Gestione Messaggi </span>
           <ng-template #interventoUser> Richiedi intervento </ng-template>
+        </button>
+
+        <button *ngIf="utenteOrAdmin() === 'utente'" mat-menu-item (click)="openRecensionePopup()">
+          <i class="fas fa-pen menu-icon"></i>
+          <span> Lascia una recensione </span>
         </button>
 
         <button mat-menu-item (click)="logout()">
@@ -252,5 +257,11 @@
 </section>
 
 <app-footer></app-footer>
+
+<app-recensione
+  [isVisible]="showRecensionePopup"
+  (closePopup)="closeRecensionePopup()"
+  (submitReview)="onSubmitReview($event)">
+</app-recensione>
 
 </body>

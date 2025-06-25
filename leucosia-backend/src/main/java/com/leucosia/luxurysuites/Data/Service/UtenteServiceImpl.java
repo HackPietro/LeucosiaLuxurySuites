@@ -49,7 +49,8 @@ public class UtenteServiceImpl implements UtenteService {
         Utente utente = utenteDao.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
         UtenteDto utenteDto = modelMapper.map(utente, UtenteDto.class);
-        utenteDto.setPassword(utente.getCredenziali().getPassword());  // mappa manualmente la password
+        utenteDto.setEmail(utente.getCredenziali().getEmail());
+        utenteDto.setPassword(utente.getCredenziali().getPassword());
         return utenteDto;
     }
 

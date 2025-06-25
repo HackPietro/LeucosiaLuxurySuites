@@ -4,6 +4,7 @@ import com.leucosia.luxurysuites.Data.Entities.Camera;
 import com.leucosia.luxurysuites.Data.Entities.PrezzoCamera;
 import com.leucosia.luxurysuites.Data.Service.CameraService;
 import com.leucosia.luxurysuites.Dto.CameraDto;
+import com.leucosia.luxurysuites.Dto.PrezzoCameraDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -44,6 +45,13 @@ public class CameraController {
         List<PrezzoCamera> prezzi = cameraService.getPrezziPerPeriodo(cameraId, start, end);
         return ResponseEntity.ok(prezzi);
     }
+
+    @PostMapping("/modificaPrezzi")
+    public ResponseEntity<String> aggiungiPrezzoCamera(@RequestBody PrezzoCameraDto dto) {
+        cameraService.aggiungiPrezzoCamera(dto);
+        return ResponseEntity.ok("Prezzi aggiunti con successo.");
+    }
+
 
 
 }
