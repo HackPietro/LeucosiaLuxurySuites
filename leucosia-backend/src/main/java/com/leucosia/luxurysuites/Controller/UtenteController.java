@@ -139,13 +139,23 @@ public class UtenteController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getUtenteById/{id}")
     public ResponseEntity<UtenteDto> getUtenteById(@PathVariable Long id) {
         try {
             UtenteDto utente = utenteService.getById(id);
             return ResponseEntity.ok(utente);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping("/recuperoPassword/{email}")
+    public ResponseEntity<?> recuperoPassword(@PathVariable String email) {
+        try {
+            utenteService.recuperoPassword(email);
+            return ResponseEntity.ok(Map.of("message", "Email di recupero inviata con successo"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Utente non trovato"));
         }
     }
 

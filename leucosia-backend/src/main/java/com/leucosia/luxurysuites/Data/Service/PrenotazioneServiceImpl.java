@@ -1,5 +1,6 @@
 package com.leucosia.luxurysuites.Data.Service;
 
+import com.leucosia.luxurysuites.Config.EmailService;
 import com.leucosia.luxurysuites.Data.Dao.CameraDao;
 import com.leucosia.luxurysuites.Data.Dao.PrenotazioneDao;
 import com.leucosia.luxurysuites.Data.Dao.UtenteDao;
@@ -10,6 +11,7 @@ import com.leucosia.luxurysuites.Data.Entities.Utente;
 import com.leucosia.luxurysuites.Dto.PrenotazioneDto;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,9 @@ public class PrenotazioneServiceImpl implements PrenotazioneService {
     private final CameraDao cameraDao;
     private final UtenteDao utenteDao;
     private final ModelMapper modelMapper;
+
+    @Autowired
+    private  EmailService emailService;
 
     public PrenotazioneServiceImpl(PrenotazioneDao prenotazioneDao, ModelMapper modelMapper,
                                    CameraDao cameraDao, UtenteDao utenteDao) {
@@ -47,17 +52,14 @@ public class PrenotazioneServiceImpl implements PrenotazioneService {
             throw new IllegalArgumentException("cameraId non può essere null");
         }
 
-        // Recupera Utente da DB
         Utente utente = utenteDao.findById(dto.getUtenteId())
                 .orElseThrow(() -> new RuntimeException("Utente non trovato con id: " + dto.getUtenteId()));
 
-        // Recupera Camera da DB
         Camera camera = cameraDao.findById(dto.getCameraId())
                 .orElseThrow(() -> new RuntimeException("Camera non trovata con id: " + dto.getCameraId()));
 
         Prenotazione prenotazione = new Prenotazione();
 
-        // Forza id a null perché è nuova prenotazione
         prenotazione.setId(null);
 
         prenotazione.setUtente(utente);
@@ -67,6 +69,24 @@ public class PrenotazioneServiceImpl implements PrenotazioneService {
         prenotazione.setTotale(dto.getTotale());
 
         Prenotazione salvata = prenotazioneDao.save(prenotazione);
+
+        if (salvata != null) {
+            String messaggio = "Ciao " + utente.getNome() + ",\n\n" +
+                    "La tua prenotazione è stata confermata con successo.\n" +
+                    "Di seguito i dettagli:\n" +
+                    "- Data: " + salvata.getDataCheckIn() + "\n" +
+                    "- Data: " + salvata.getDataCheckOut() + "\n" +
+                    "- Camera: " + salvata.getCamera() + "\n\n" +
+                    "- Totale da pagare al check-in: " + salvata.getTotale() + "\n\n" +
+                    "Grazie per aver scelto il nostro servizio!\n\n" +
+                    "Saluti,\nIl team";
+
+            emailService.inviaEmail(
+                    utente.getCredenziali().getEmail(),
+                    "Conferma Prenotazione",
+                    messaggio
+            );
+        }
 
         // Mappa a DTO (assumendo ci sia un costruttore o metodo di conversione)
         return new PrenotazioneDto(

@@ -20,7 +20,6 @@ public class PrenotazioneController {
 
     @PostMapping
     public PrenotazioneDto createPrenotazione(@RequestBody PrenotazioneDto prenotazioneDto) {
-        System.out.println("Ricevuto PrenotazioneDto: " + prenotazioneDto);
         try {
             return prenotazioneService.createPrenotazione(prenotazioneDto);
         } catch (Exception e) {

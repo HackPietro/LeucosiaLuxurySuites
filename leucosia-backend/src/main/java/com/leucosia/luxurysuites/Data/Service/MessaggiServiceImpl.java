@@ -1,9 +1,11 @@
 package com.leucosia.luxurysuites.Data.Service;
 
+import com.leucosia.luxurysuites.Config.EmailService;
 import com.leucosia.luxurysuites.Data.Dao.MessaggiDao;
 import com.leucosia.luxurysuites.Data.Entities.Messaggi;
 import com.leucosia.luxurysuites.Dto.MessaggiDto;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,9 @@ public class MessaggiServiceImpl implements MessaggiService {
     private final MessaggiDao messaggiDao;
     private final ModelMapper modelMapper;
 
+    @Autowired
+    private EmailService emailService;
+
     public MessaggiServiceImpl(MessaggiDao messaggiDao, ModelMapper modelMapper) {
         this.messaggiDao = messaggiDao;
         this.modelMapper = modelMapper;
@@ -24,7 +29,23 @@ public class MessaggiServiceImpl implements MessaggiService {
     public void salvaMessaggio(MessaggiDto dto) {
         Messaggi messaggio = modelMapper.map(dto, Messaggi.class);
         messaggiDao.save(messaggio);
+
+        String testoMessaggio = "Ciao " + messaggio.getNome() + ",\n\n" +
+                "Abbiamo ricevuto il tuo messaggio correttamente. Ecco una copia del contenuto che ci hai inviato:\n\n" +
+                "---------------------------------------\n" +
+                messaggio.getMessaggio() + "\n" +
+                "---------------------------------------\n\n" +
+                "Ti risponderemo il prima possibile.\n\n" +
+                "Grazie per averci contattato!\n\n" +
+                "Saluti,\nIl team Luxury Suites";
+
+        emailService.inviaEmail(
+                messaggio.getEmail(),
+                "Messaggio Ricevuto",
+                testoMessaggio
+        );
     }
+
 
     @Override
     public List<MessaggiDto> getTuttiIMessaggi() {

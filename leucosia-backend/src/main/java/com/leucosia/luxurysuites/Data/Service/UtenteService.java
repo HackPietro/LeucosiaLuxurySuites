@@ -19,4 +19,6 @@ public interface UtenteService {
 
     boolean emailExists(String email);
 
+    void recuperoPassword(String email) throws Exception;
+
 }

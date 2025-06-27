@@ -10,7 +10,4 @@ import java.util.Optional;
 public interface UtenteDao extends JpaRepository<Utente, Long> {
 
     Optional<Utente> findByCredenzialiEmail(String credenzialiEmail);
-
-
-
 }

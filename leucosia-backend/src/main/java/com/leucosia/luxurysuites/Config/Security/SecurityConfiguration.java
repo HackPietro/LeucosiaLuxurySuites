@@ -27,6 +27,9 @@ public class SecurityConfiguration {
             "/camera-api/prezzi",
             "/utente-api/doLogin",
             "/utente-api/doRegistration",
+            "/utente-api/recuperoPassword/**",
+            "/recensione-api/recensioni",
+            "/utente-api/getUtenteById/*",
             "/styles/**",
             "/js/**",
             "/images/**",
@@ -44,12 +47,12 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ✅ AGGIUNGI QUESTO
+                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             .requestMatchers(PATH_WHITELIST).permitAll()
                             .anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // Disabilita la sessione
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .logout(logout -> logout
                         .permitAll()
                         .invalidateHttpSession(false)  // Non invalidare la sessione, non la usiamo

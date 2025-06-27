@@ -173,43 +173,18 @@
 <section class="testimonials">
   <div class="container">
     <h2 class="section-title">Cosa Dicono i Nostri Ospiti</h2>
-    <div class="testimonials-grid">
-      <div class="testimonial-card">
+    <div class="testimonials-scroll">
+      <div class="testimonial-card" *ngFor="let recensione of recensioni">
         <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
+          <i class="fas fa-star" *ngFor="let star of [].constructor(recensione.stelle)"></i>
         </div>
-        <p class="testimonial-text">"Un'esperienza indimenticabile! Il personale è stato eccezionale e la vista dalla nostra camera era semplicemente spettacolare."</p>
-        <p class="testimonial-author">- Marco e Giulia, Roma</p>
-      </div>
-      <div class="testimonial-card">
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-        <p class="testimonial-text">"Il ristorante dell'hotel ha superato ogni aspettativa. Non abbiamo mai mangiato così bene durante una vacanza!"</p>
-        <p class="testimonial-author">- Sophie e Pierre, Parigi</p>
-      </div>
-      <div class="testimonial-card">
-        <div class="stars">
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-          <i class="fas fa-star"></i>
-        </div>
-        <p class="testimonial-text">"La spa è stata la ciliegina sulla torta di un soggiorno perfetto. Torneremo sicuramente il prossimo anno!"</p>
-        <p class="testimonial-author">- Thomas e Anna, Berlino</p>
+        <p class="testimonial-text">"{{ recensione.commento }}"</p>
+        <p class="testimonial-author">- {{ recensione.nome }} {{ recensione.cognome }}</p>
       </div>
     </div>
   </div>
 </section>
+
 
 <section class="contact-section" id="contatti">
   <div class="container">

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RequestMapping("/recensione-api")
@@ -18,8 +20,12 @@ public class RecensioneController {
 
     @PostMapping
     public ResponseEntity<String> addRecensione(@RequestBody RecensioneDto dto) {
-        System.out.println("ciao");
         recensioneService.aggiungiRecensione(dto);
         return ResponseEntity.ok("Recensione aggiunta con successo.");
+    }
+
+    @GetMapping("/recensioni")
+    public List<RecensioneDto> getRecensioni() {
+        return recensioneService.getRecensioni();
     }
 }

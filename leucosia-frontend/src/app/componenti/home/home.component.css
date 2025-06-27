@@ -338,28 +338,37 @@ nav ul li a.active {
   gap: 30px;
 }
 
-.testimonial-card {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 30px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+.testimonials-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  scroll-snap-type: x mandatory;
 }
 
-.stars {
-  color: #e8a75d;
-  margin-bottom: 15px;
+.testimonial-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  min-width: 300px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.testimonial-card .stars {
+  color: #FFD700;
+  margin-bottom: 0.5rem;
 }
 
 .testimonial-text {
   font-style: italic;
-  margin-bottom: 15px;
-  line-height: 1.7;
+  margin-bottom: 0.5rem;
 }
 
 .testimonial-author {
-  text-align: right;
-  font-weight: 600;
-  color: #1a3a5f;
+  font-weight: bold;
+  color: #333;
 }
 
 /* Sezione Contatti */

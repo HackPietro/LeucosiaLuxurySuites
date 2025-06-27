@@ -22,8 +22,6 @@ export class RecensioneComponent {
     const utente = JSON.parse(localStorage.getItem('utente') || 'null');
     const utenteId = utente.id;
 
-    alert(utenteId);
-
     if (this.stelle > 0 && utenteId) {
       this.submitReview.emit({
         stelle: this.stelle,

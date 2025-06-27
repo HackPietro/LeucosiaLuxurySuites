@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import {Messaggio} from "../Model/Messaggio";
 import {Camera} from "../Model/Camera";
 import {Prenotazione} from "../Model/Prenotazione";
+import {Recensione} from "../Model/Recensione";
 
 @Injectable({
   providedIn: 'root'
@@ -69,7 +70,7 @@ export class Service {
   }
 
   getUtenteById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/utente-api/${id}`, { withCredentials: true });
+    return this.http.get<any>(`${this.baseUrl}/utente-api/getUtenteById/${id}`);
   }
 
   //ho aggiunto any dopo post, vedere se restituisce ancora errore e cambia lo stesso i prezzi
@@ -85,8 +86,11 @@ export class Service {
   }
 
   addRecensione(stelle: number, commento: string, utenteId: number): Observable<any> {
-    alert("ciao");
     return this.http.post<any>(`${this.baseUrl}/recensione-api`, {stelle, commento, utenteId}, { withCredentials: true });
+  }
+
+  getRecensioni(): Observable<Recensione[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/recensione-api/recensioni`);
   }
 
 }

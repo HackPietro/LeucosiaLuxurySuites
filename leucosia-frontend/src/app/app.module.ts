@@ -36,6 +36,7 @@ import {FooterComponent} from "./componenti/footer/footer.component";
 import {Gestione_prenotazioniComponent} from "./componenti/gestione_prenotazioni/gestione_prenotazioni.component";
 import {Gestione_camereComponent} from "./componenti/gestione_camere/gestione_camere.component";
 import {RecensioneComponent} from "./componenti/recensione/recensione.component";
+import {Recupera_passwordComponent} from "./componenti/recupera_password/recupera_password.component";
 
 
 registerLocaleData(localeIt);
@@ -53,7 +54,8 @@ registerLocaleData(localeIt);
     FooterComponent,
     Gestione_prenotazioniComponent,
     Gestione_camereComponent,
-    RecensioneComponent
+    RecensioneComponent,
+    Recupera_passwordComponent,
   ],
   imports: [
     BrowserModule,

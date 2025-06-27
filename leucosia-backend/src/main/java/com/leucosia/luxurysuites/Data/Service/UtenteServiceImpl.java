@@ -1,5 +1,6 @@
 package com.leucosia.luxurysuites.Data.Service;
 
+import com.leucosia.luxurysuites.Config.EmailService;
 import com.leucosia.luxurysuites.Config.Security.TokenStore;
 import com.leucosia.luxurysuites.Data.Dao.UtenteDao;
 import com.leucosia.luxurysuites.Data.Entities.Utente;
@@ -7,6 +8,7 @@ import com.leucosia.luxurysuites.Dto.UtenteDto;
 import com.nimbusds.jose.JOSEException;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -25,6 +27,9 @@ public class UtenteServiceImpl implements UtenteService {
     private final ModelMapper modelMapper;
     private final TokenStore tokenStore;
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
 
     @Value("${jwt.secret}")
@@ -114,4 +119,38 @@ public class UtenteServiceImpl implements UtenteService {
         return utenteDao.findByCredenzialiEmail(email).isPresent();
     }
 
+    @Override
+    public void recuperoPassword(String email) throws Exception {
+        UtenteDto utenteDto = getByEmail(email);
+
+        if (utenteDto == null) {
+            throw new Exception("Utente non trovato");
+        }
+
+        Utente utente = utenteDto.toEntity();
+
+        String nuovaPassword = generaPasswordCasuale(10);
+
+        String messaggio = "Ciao " + utente.getNome() + ",\n\n" +
+                "Abbiamo generato una nuova password per il tuo account: " + nuovaPassword + "\n" +
+                "Ti consigliamo di cambiarla al primo login.\n\n" +
+                "Saluti,\nIl team";
+
+        emailService.inviaEmail(utente.getCredenziali().getEmail(), "Recupero Password", messaggio);
+
+        utente.getCredenziali().setPassword(passwordEncoder.encode(nuovaPassword));
+
+        utenteDao.save(utente);
+    }
+
+
+    private String generaPasswordCasuale(int lunghezza) {
+        String caratteri = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+        Random rnd = new Random();
+        for (int i = 0; i < lunghezza; i++) {
+            password.append(caratteri.charAt(rnd.nextInt(caratteri.length())));
+        }
+        return password.toString();
+    }
 }
