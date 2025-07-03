@@ -21,4 +21,7 @@ public interface UtenteService {
 
     void recuperoPassword(String email) throws Exception;
 
+    String generaPasswordEInviaEmail(String nome, String email) throws Exception;
+
+
 }

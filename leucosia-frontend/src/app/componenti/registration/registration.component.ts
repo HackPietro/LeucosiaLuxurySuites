@@ -26,7 +26,7 @@ export class RegistrationComponent {
     this.successMessage = '';
 
     // Controllo campi compilati
-    if (!this.nome || !this.cognome || !this.email || !this.password) {
+    if (!this.nome || !this.cognome || !this.telefono || !this.email) {
       this.errorMessage = 'Tutti i campi sono obbligatori';
       return;
     }
@@ -42,14 +42,13 @@ export class RegistrationComponent {
       cognome: this.cognome,
       telefono: this.telefono,
       email: this.email,
-      password: this.password,
       tipologia: this.tipologia,
     };
 
     this.authService.doRegistration(utente).subscribe({
       next: (res) => {
-        this.successMessage = 'Registrazione avvenuta con successo!';
-        setTimeout(() => this.router.navigate(['/login']), 2000);
+        this.successMessage = 'Registrazione avvenuta con successo. Abbiamo inviato una email contenente la password. Ti consigliamo di cambiarla al primo accesso.';
+        setTimeout(() => this.router.navigate(['/login']), 3500);
       },
       error: (err) => {
         // Gestione errore specifico se email già presente

@@ -38,18 +38,29 @@ public class UtenteController {
                     .body(Map.of("error", "Email già registrata"));
         }
 
-        String encodedPassword = passwordEncoder.encode(utenteDto.getPassword());
-        utenteDto.setPassword(encodedPassword);
+        try {
+            // Genera password + invia email
+            String passwordGenerata = utenteService.generaPasswordEInviaEmail(utenteDto.getNome(), utenteDto.getEmail());
 
-        utenteService.save(utenteDto.toEntity());
+            // Codifica e imposta password
+            utenteDto.setPassword(passwordEncoder.encode(passwordGenerata));
 
-        utenteDto.setPassword(null);
+            // Salva l’utente
+            utenteService.save(utenteDto.toEntity());
 
-        return ResponseEntity.ok(Map.of(
-                "message", "Registrazione effettuata con successo",
-                "utente", utenteDto
-        ));
+            // Non restituire la password al client
+            utenteDto.setPassword(null);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Registrazione effettuata con successo. Controlla la tua email per la password.",
+                    "utente", utenteDto
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Errore durante la registrazione: " + e.getMessage()));
+        }
     }
+
 
     @PostMapping("/doLogin")
     public ResponseEntity<?> doLogin(@RequestBody UtenteDto utenteDto, HttpServletResponse response) throws JOSEException {

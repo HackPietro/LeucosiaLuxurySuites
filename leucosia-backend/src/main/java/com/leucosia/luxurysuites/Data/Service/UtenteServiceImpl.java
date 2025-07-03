@@ -153,4 +153,20 @@ public class UtenteServiceImpl implements UtenteService {
         }
         return password.toString();
     }
+
+    @Override
+    public String generaPasswordEInviaEmail(String nome, String email) throws Exception {
+        String nuovaPassword = generaPasswordCasuale(10);
+
+        String messaggio = "Ciao " + nome + ",\n\n" +
+                "Benvenuto in Luxury Suites!\n" +
+                "La tua password provvisoria è: " + nuovaPassword + "\n" +
+                "Ti consigliamo di cambiarla al primo accesso.\n\n" +
+                "Saluti,\nIl team";
+
+        emailService.inviaEmail(email, "Benvenuto! Password temporanea", messaggio);
+
+        return nuovaPassword;
+    }
+
 }
