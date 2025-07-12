@@ -20,8 +20,13 @@ public class RecensioneController {
 
     @PostMapping
     public ResponseEntity<String> addRecensione(@RequestBody RecensioneDto dto) {
-        recensioneService.aggiungiRecensione(dto);
-        return ResponseEntity.ok("Recensione aggiunta con successo.");
+        try {
+            recensioneService.addRecensione(dto);
+            return ResponseEntity.ok("Recensione aggiunta con successo.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Errore durante l'aggiunta della recensione.");
+        }
     }
 
     @GetMapping("/recensioni")

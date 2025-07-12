@@ -21,15 +21,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UtenteController {
 
+    @Autowired
     private final UtenteService utenteService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @PostMapping("/validateToken")
-    public ResponseEntity<?> validateToken() {
-        return ResponseEntity.ok(Map.of("valid", true));
-    }
 
     @PostMapping("/doRegistration")
     public ResponseEntity<?> doRegistration(@RequestBody UtenteDto utenteDto, HttpServletResponse response) throws JOSEException {
@@ -39,22 +35,16 @@ public class UtenteController {
         }
 
         try {
-            // Genera password + invia email
-            String passwordGenerata = utenteService.generaPasswordEInviaEmail(utenteDto.getNome(), utenteDto.getEmail());
+            String passwordGenerata = utenteService.generaPasswordEInviaEmailDiRegistrazione(utenteDto.getNome(), utenteDto.getEmail());
 
-            // Codifica e imposta password
             utenteDto.setPassword(passwordEncoder.encode(passwordGenerata));
 
-            // Salva l’utente
             utenteService.save(utenteDto.toEntity());
 
-            // Non restituire la password al client
             utenteDto.setPassword(null);
 
-            return ResponseEntity.ok(Map.of(
-                    "message", "Registrazione effettuata con successo. Controlla la tua email per la password.",
-                    "utente", utenteDto
-            ));
+            return ResponseEntity.ok(Map.of("utente", utenteDto));
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Errore durante la registrazione: " + e.getMessage()));
@@ -92,6 +82,8 @@ public class UtenteController {
             response.addCookie(refreshCookie);
 
             utente.setPassword(null);
+
+            utenteService.inviaEmailDiLogin(utente.getNome(), utente.getEmail());
 
             return ResponseEntity.ok(Map.of(
                     "message", "Login effettuato con successo",

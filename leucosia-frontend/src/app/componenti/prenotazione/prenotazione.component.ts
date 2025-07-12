@@ -23,6 +23,8 @@ export class PrenotazioneComponent implements OnInit {
   sovrapprezzoSpese: number = 0;
   numeroNotti: number = 0;
 
+  popupMessage: string = '';
+
   constructor(private fb: FormBuilder, private service: Service, private authService: AuthService,
               private router: Router) {}
 
@@ -35,17 +37,32 @@ export class PrenotazioneComponent implements OnInit {
         this.setupDateChangeListeners();
       },
       error: err => {
-        console.error('Errore caricamento camere', err);
+        this.popupMessage = 'Errore nel caricamento delle camere';
       }
     });
 
     this.setupFormChangeListener();
   }
 
+  dateValide(): boolean {
+    const checkIn = this.prenotazioneForm.get('checkIn')?.value;
+    const checkOut = this.prenotazioneForm.get('checkOut')?.value;
+    const checkInValido = !!this.prenotazioneForm.get('checkIn')?.valid;
+    const checkOutValido = !!this.prenotazioneForm.get('checkOut')?.valid;
+
+    return !!checkIn && !!checkOut && checkInValido && checkOutValido;
+  }
+
+
   private setupDateChangeListeners() {
-    this.prenotazioneForm.get('checkIn')?.valueChanges.subscribe(() => this.onDateChange());
+    this.prenotazioneForm.get('checkIn')?.valueChanges.subscribe(() => {
+      this.prenotazioneForm.get('checkOut')?.updateValueAndValidity(); // <-- aggiorna validità checkOut
+      this.onDateChange();
+    });
+
     this.prenotazioneForm.get('checkOut')?.valueChanges.subscribe(() => this.onDateChange());
   }
+
 
   private setupFormChangeListener() {
     this.prenotazioneForm.valueChanges.subscribe(() => {
@@ -61,14 +78,6 @@ export class PrenotazioneComponent implements OnInit {
         this.prenotazioneForm.get('checkOut')?.valid
       ) {
         this.calcolaPrezzoTotale();
-
-        alert(
-          `Camera: ${this.getCameraSelezionata()?.nome || 'N/A'}\n` +
-          `Prezzo base: €${this.prezzoBase}\n` +
-          `Sovrapprezzo spese: €${this.sovrapprezzoSpese}\n` +
-          `Prezzo totale: €${this.prezzoTotale}\n` +
-          `Notti: ${this.numeroNotti}`
-        );
       }
     });
   }
@@ -80,7 +89,7 @@ export class PrenotazioneComponent implements OnInit {
       telefono: [''],
       camera: ['', Validators.required],
       checkIn: ['', [Validators.required, this.validatoreData]],
-      checkOut: ['', [Validators.required, this.validatoreData]],
+      checkOut: ['', [Validators.required, this.validatoreData, this.validatoreCheckOutDopoCheckIn.bind(this)]],
       richieste: [''],
       metodoPagamento: ['contanti']
     });
@@ -97,20 +106,13 @@ export class PrenotazioneComponent implements OnInit {
     this.service.getCamereDisponibili(checkIn, checkOut).subscribe({
       next: (camereDisponibili) => {
         this.camere = camereDisponibili;
-
-        // Se vuoi, imposta la prima camera disponibile di default
-        if (this.camere.length > 0) {
-          this.prenotazioneForm.get('camera')?.setValue(this.camere[0].id);
-        } else {
-          this.prenotazioneForm.get('camera')?.setValue(null);
-        }
-
+        this.prenotazioneForm.get('camera')?.setValue(null); // Reset camera selezionata
         this.calcolaPrezzoTotale();
       },
       error: (err) => {
-        console.error('Errore caricamento camere disponibili', err);
         this.camere = [];
         this.prenotazioneForm.get('camera')?.setValue(null);
+        this.popupMessage = 'Errore nel caricamento delle camere disponibili';
       }
     });
   }
@@ -172,6 +174,7 @@ export class PrenotazioneComponent implements OnInit {
 
     this.calcolaPrezzoTotale();
   }
+
   calcolaPrezzoTotale() {
     const checkIn = new Date(this.prenotazioneForm.get('checkIn')?.value);
     const checkOut = new Date(this.prenotazioneForm.get('checkOut')?.value);
@@ -220,6 +223,7 @@ export class PrenotazioneComponent implements OnInit {
       this.prezzoTotale = totale + this.sovrapprezzoSpese;
     });
   }
+
   getCameraSelezionata(): Camera | undefined {
     const cameraIdStr = this.prenotazioneForm.get('camera')?.value;
     const cameraId = Number(cameraIdStr);
@@ -259,46 +263,34 @@ export class PrenotazioneComponent implements OnInit {
       return;
     }
 
-    this.authService.validateToken().subscribe(isValid => {
-      if (!isValid) {
-        alert('Devi effettuare il login per prenotare.');
-        this.router.navigate(['/login']);
-        return;
+    const utenteJson = localStorage.getItem('utente');
+    if (!utenteJson) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const utente = JSON.parse(utenteJson);
+    const camera = this.getCameraSelezionata();
+    if (!camera || camera.id === undefined) {
+      return;
+    }
+
+    const formVal = this.prenotazioneForm.value;
+    const prenotazione: Prenotazione = {
+      utenteId: utente.id,
+      dataCheckIn: new Date(formVal.checkIn),
+      dataCheckOut: new Date(formVal.checkOut),
+      cameraId: camera.id,
+      totale: this.prezzoTotale
+    };
+
+    this.service.createPrenotazione(prenotazione).subscribe({
+      next: (message) => {
+        this.popupMessage = message;
+      },
+      error: (err) => {
+        this.popupMessage = err.error;
       }
-
-      const utenteJson = localStorage.getItem('utente');
-      if (!utenteJson) {
-        alert('Utente non trovato. Effettua il login.');
-        this.router.navigate(['/login']);
-        return;
-      }
-
-      const utente = JSON.parse(utenteJson);
-      const camera = this.getCameraSelezionata();
-      if (!camera || camera.id === undefined) {
-        alert('Seleziona una camera valida.');
-        return;
-      }
-
-      const formVal = this.prenotazioneForm.value;
-      const prenotazione: Prenotazione = {
-        utenteId: utente.id,
-        dataCheckIn: new Date(formVal.checkIn),
-        dataCheckOut: new Date(formVal.checkOut),
-        cameraId: camera.id,
-        totale: this.prezzoTotale
-      };
-
-      this.service.createPrenotazione(prenotazione).subscribe({
-        next: () => {
-          alert('Prenotazione inserita con successo!');
-          this.prenotazioneForm.reset();
-        },
-        error: (err) => {
-          console.error('Errore inserimento prenotazione', err);
-          alert('Si è verificato un errore durante l\'invio della prenotazione.');
-        }
-      });
     });
   }
 
@@ -311,5 +303,10 @@ export class PrenotazioneComponent implements OnInit {
         this.segnaFormGroupToccato(control);
       }
     });
+  }
+
+  chiudiPopup() {
+    this.popupMessage = '';
+    this.router.navigate(['/home']);
   }
 }

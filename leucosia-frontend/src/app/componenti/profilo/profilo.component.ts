@@ -38,10 +38,6 @@ export class ProfiloComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    if (!this.authService.validateToken()) {
-      this.router.navigate(['/login']);
-      return;
-    }
 
     const utenteStr = localStorage.getItem("utente");
     if (utenteStr){

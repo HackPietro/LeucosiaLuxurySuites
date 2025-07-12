@@ -1,26 +1,20 @@
-<div class="messages-container">
-  <header class="messages-header">
-    <div class="header-content">
-      <h1 class="page-title">
-        <i class="fas fa-bed"></i>
-        Prenota una Camera
-      </h1>
-      <p class="page-subtitle">Completa i dati per effettuare la prenotazione</p>
-    </div>
-    <div class="header-actions">
-      <a class="btn btn-back" href="/home">
-        <i class="fas fa-arrow-left"></i>
-        Torna Indietro
-      </a>
-    </div>
-  </header>
+<app-header></app-header>
 
+<!-- Sezione titolo hero -->
+<section class="hero-title">
+  <div class="hero-content">
+    <h2><mat-icon>bed</mat-icon> Prenota una Camera</h2>
+    <p>Completa i dati per effettuare la prenotazione</p>
+  </div>
+</section>
+
+<div class="messages-container">
   <form [formGroup]="prenotazioneForm" (ngSubmit)="onSubmit()" class="booking-form">
 
     <!-- Sezione Dettagli Prenotazione -->
     <div class="form-section">
       <h2 class="section-title">
-        <i class="fas fa-calendar-check"></i>
+        <mat-icon>calendar_today</mat-icon>
         Dettagli Prenotazione
       </h2>
 
@@ -51,61 +45,46 @@
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" *ngIf="dateValide()">
         <div class="form-group">
           <label for="camera">Tipo di Camera *</label>
-          <select
-            id="camera"
-            formControlName="camera">
+          <select id="camera" formControlName="camera">
+            <option value="">Seleziona una camera</option>
             <option *ngFor="let camera of camere" [value]="camera.id">
-              {{ camera.nome }} - €{{ camera.prezzoBase }}/notte
+              {{ camera.nome }} - {{ camera.postiLetto }} persone - €{{ camera.prezzoBase }}/notte
             </option>
           </select>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="richieste">Richieste Speciali</label>
-        <textarea
-          id="richieste"
-          formControlName="richieste"
-          rows="3"
-          placeholder="Eventuali richieste speciali o note per la prenotazione..."></textarea>
       </div>
     </div>
 
     <!-- Sezione Riepilogo Prezzo -->
     <div class="form-section price-summary" *ngIf="prezzoTotale > 0">
       <h2 class="section-title">
-        <i class="fas fa-calculator"></i>
-        Riepilogo Prezzo
+        <mat-icon>list</mat-icon>
+        {{ getCameraSelezionata()?.nome }} ({{ prenotazioneForm.get('checkIn')?.value | date:'dd/MM/yyyy'}} - {{ prenotazioneForm.get('checkOut')?.value | date:'dd/MM/yyyy'}})
       </h2>
 
       <div class="price-details">
-        <!-- Prezzi giorno per giorno -->
         <div *ngIf="prezziGiornalieri.length > 0" class="daily-prices">
           <div class="price-row" *ngFor="let giorno of prezziGiornalieri">
-            <span>{{ giorno.data }}</span>
+            <span>{{ giorno.data | date:'dd/MM/yyyy' }}</span>
             <span class="price">€{{ giorno.prezzo.toFixed(2) }}</span>
           </div>
         </div>
 
         <hr />
 
-        <!-- Riepilogo base -->
+        <!-- Totale con sovrapprezzo accanto -->
         <div class="price-row">
-          <span>{{ getCameraSelezionata()?.prezzoBase }} x {{ numeroNotti }} notte/i</span>
-          <span class="price">€{{ prezzoBase.toFixed(2) }}</span>
-        </div>
-
-        <div class="price-row" *ngIf="sovrapprezzoSpese > 0">
-          <span>Sovrapprezzo spese</span>
-          <span class="price">€{{ sovrapprezzoSpese.toFixed(2) }}</span>
-        </div>
-
-        <div class="price-row total">
-          <span><strong>Totale</strong></span>
-          <span class="price"><strong>€{{ prezzoTotale.toFixed(2) }}</strong></span>
+          <span><strong>Periodo: {{ numeroNotti }} notte/i</strong></span>
+          <span class="price">
+            <strong>
+              <span *ngIf="sovrapprezzoSpese > 0">
+                Totale: €{{ (prezzoTotale).toFixed(2) }} (incluso +10% sovrapprezzo spese)
+              </span>
+            </strong>
+          </span>
         </div>
       </div>
     </div>
@@ -113,7 +92,7 @@
     <!-- Sezione Metodo di Pagamento -->
     <div class="form-section" *ngIf="prezzoTotale > 0">
       <h2 class="section-title">
-        <i class="fas fa-credit-card"></i>
+        <mat-icon>payment</mat-icon>
         Metodo di Pagamento
       </h2>
 
@@ -125,7 +104,7 @@
             formControlName="metodoPagamento"
             value="contanti">
           <label for="contanti" class="payment-label">
-            <i class="fas fa-money-bill-wave"></i>
+            <mat-icon>money</mat-icon>
             <div>
               <strong>Pagamento in Contanti</strong>
               <small>Pagherai al check-in presso la struttura</small>
@@ -138,7 +117,7 @@
     <!-- Pulsante di Invio -->
     <div class="form-actions" *ngIf="prezzoTotale > 0">
       <button type="submit" class="btn btn-primary btn-large">
-        <i class="fas fa-check"></i>
+        <mat-icon>check</mat-icon>
         Conferma Prenotazione
         <span class="btn-price">€{{ prezzoTotale.toFixed(2) }}</span>
       </button>
@@ -146,8 +125,12 @@
   </form>
 </div>
 
+<!-- Popup Messaggio -->
+<div *ngIf="popupMessage" class="popup-overlay">
+  <div class="popup-box">
+    <p>{{ popupMessage }}</p>
+    <button (click)="chiudiPopup()" class="btn btn-primary">OK</button>
+  </div>
+</div>
+
 <app-footer></app-footer>
-
-
-
-

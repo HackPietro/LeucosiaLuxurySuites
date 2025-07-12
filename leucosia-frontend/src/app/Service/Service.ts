@@ -15,29 +15,28 @@ export class Service {
 
   constructor(private http: HttpClient) {}
 
-  createNews(news: Partial<News>): Observable<News> {
-    return this.http.post<News>(`${this.baseUrl}/news-api`, news, { withCredentials: true });
+  createNews(news: Partial<News>): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl}/news-api`, news, { withCredentials: true, responseType: 'text' as 'json' });
   }
 
-  deleteNews(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/news-api/${id}`, { withCredentials: true });
+  deleteNews(id: number): Observable<string> {
+    return this.http.delete<string>(`${this.baseUrl}/news-api/${id}`, { withCredentials: true, responseType: 'text' as 'json' });
   }
 
   getAllNews(): Observable<News[]> {
     return this.http.get<News[]>(`${this.baseUrl}/news-api`, { withCredentials: true });
   }
 
-  inviaMessaggio(messaggio: Messaggio): Observable<any> {
-    return this.http.post<Messaggio>(`${this.baseUrl}/messaggi-api`, messaggio, { withCredentials: true });
+  inviaMessaggio(messaggio: Messaggio): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl}/messaggi-api`, messaggio, { withCredentials: true, responseType: 'text' as 'json' });
   }
 
   getMessaggi(): Observable<Messaggio[]> {
     return this.http.get<Messaggio[]>(`${this.baseUrl}/messaggi-api`, { withCredentials: true });
   }
 
-  deleteMessaggio(id: number): Observable<void> {
-    alert(`Eliminazione del messaggio con ID: ${id}`);
-    return this.http.delete<void>(`${this.baseUrl}/messaggi-api/${id}`, { withCredentials: true });
+  deleteMessaggio(id: number): Observable<string> {
+    return this.http.delete<string>(`${this.baseUrl}/messaggi-api/${id}`, { withCredentials: true, responseType: 'text' as 'json' });
   }
 
   getCamere(): Observable<Camera[]> {
@@ -52,9 +51,8 @@ export class Service {
     return this.http.get<any[]>(`${this.baseUrl}/camera-api/prezzi?cameraId=${cameraId}&start=${start}&end=${end}`);
   }
 
-  createPrenotazione(prenotazione: Partial<Prenotazione>): Observable<Prenotazione> {
-    alert(`Creazione prenotazione: ${JSON.stringify(prenotazione)}`);
-    return this.http.post<Prenotazione>(`${this.baseUrl}/prenotazione-api`, prenotazione, { withCredentials: true });
+  createPrenotazione(prenotazione: Partial<Prenotazione>): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl}/prenotazione-api`, prenotazione, { withCredentials: true, responseType: 'text' as 'json' });
   }
 
   getPrenotazioni(): Observable<Prenotazione[]> {
@@ -65,28 +63,27 @@ export class Service {
     return this.http.get<Prenotazione[]>(`${this.baseUrl}/prenotazione-api/utente/${utenteId}`, { withCredentials: true });
   }
 
-  eliminaPrenotazione(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/prenotazione-api/${id}`, { withCredentials: true });
+  eliminaPrenotazione(id: number): Observable<string> {
+    return this.http.delete<string>(`${this.baseUrl}/prenotazione-api/${id}`, { withCredentials: true, responseType: 'text' as 'json' });
   }
 
   getUtenteById(id: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/utente-api/getUtenteById/${id}`);
   }
 
-  //ho aggiunto any dopo post, vedere se restituisce ancora errore e cambia lo stesso i prezzi
-  addPrezzoCamera(cameraId: number, prezzo: number, dataInizio: string, dataFine: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/camera-api/modificaPrezzi`, {
+  addPrezzoCamera( cameraId: number, prezzo: number,  dataInizio: string, dataFine: string ): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl}/camera-api/modificaPrezzi`, {
       cameraId,
       prezzo,
       dataInizio,
       dataFine
     }, {
-      withCredentials: true
-    });
+      withCredentials: true, responseType: 'text' as 'json' });
   }
 
-  addRecensione(stelle: number, commento: string, utenteId: number): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/recensione-api`, {stelle, commento, utenteId}, { withCredentials: true });
+
+  addRecensione(stelle: number, commento: string, utenteId: number): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl}/recensione-api`, {stelle, commento, utenteId}, { withCredentials: true, responseType: 'text' as 'json' });
   }
 
   getRecensioni(): Observable<Recensione[]> {

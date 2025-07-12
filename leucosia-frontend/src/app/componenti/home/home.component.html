@@ -1,11 +1,3 @@
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leucosia Luxury Suites - Il tuo rifugio di lusso</title>
-  <link rel="stylesheet" href="home.component.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
 <header>
   <div class="header-container">
     <div class="logo-container">
@@ -19,79 +11,78 @@
     </div>
     <nav>
       <ul>
-        <li><a href="" class="active">Home</a></li>
-        <li><a href="#servizi">Servizi</a></li>
-        <li><a href="#camere">Camere</a></li>
-        <li><a href="#contatti">Contatti</a></li>
+        <li><a [routerLink]="[]" fragment="home" [class.active]="currentSection === 'home'">Home</a></li>
+        <li><a [routerLink]="[]" fragment="servizi" [class.active]="currentSection === 'servizi'">Servizi</a></li>
+        <li><a [routerLink]="[]" fragment="camere" [class.active]="currentSection === 'camere'">Camere</a></li>
+        <li><a [routerLink]="[]" fragment="recensioni" [class.active]="currentSection === 'recensioni'">Recensioni</a></li>
+        <li><a [routerLink]="[]" fragment="contatti" [class.active]="currentSection === 'contatti'">Contatti</a></li>
       </ul>
     </nav>
 
     <!-- Bottone Login (visibile solo se NON loggato) -->
     <div *ngIf="!showMenu">
-      <a mat-button routerLink="/login">
-        <i class="fas fa-user"></i> Profilo
+      <a mat-button routerLink="/login" class="profilo-link">
+        <mat-icon>person</mat-icon> Profilo
       </a>
     </div>
 
     <!-- Bottone Profilo con mat-menu (visibile solo se loggato) -->
     <div *ngIf="showMenu">
-      <button mat-button [matMenuTriggerFor]="profileMenu">
-        <i class="fas fa-user"></i> Profilo
+      <button mat-button [matMenuTriggerFor]="profileMenu" class="profilo-link">
+        <mat-icon>person</mat-icon> Profilo
       </button>
 
       <mat-menu #profileMenu="matMenu">
         <button mat-menu-item routerLink="/profilo">
-          <i class="fas fa-user"></i>
+          <mat-icon>person</mat-icon>
           <span> Profilo </span>
         </button>
 
         <button *ngIf="utenteOrAdmin() === 'admin'" mat-menu-item routerLink="/gestione_camere">
-          <i class="fas fa-bed menu-icon"></i>
+          <mat-icon>bed</mat-icon>
           <span> Gestione Camere </span>
         </button>
 
         <button mat-menu-item routerLink="/gestione_prenotazioni">
-          <i class="fas fa-calendar-alt menu-icon"></i>
+          <mat-icon>calendar_today</mat-icon>
           <span> Gestione Prenotazioni </span>
         </button>
 
         <button mat-menu-item routerLink="/news">
-          <i class="fas fa-newspaper menu-icon"></i>
+          <mat-icon>article</mat-icon>
           <span *ngIf="utenteOrAdmin() === 'admin'; else newsUser"> Gestione News </span>
           <ng-template #newsUser> News </ng-template>
         </button>
 
         <button mat-menu-item [routerLink]="utenteOrAdmin() === 'admin' ? '/gestione_messaggi' : '/richiedi_intervento'">
-          <i class="fas fa-tools menu-icon"></i>
+          <mat-icon>build</mat-icon>
           <span *ngIf="utenteOrAdmin() === 'admin'; else interventoUser"> Gestione Messaggi </span>
           <ng-template #interventoUser> Richiedi intervento </ng-template>
         </button>
 
         <button *ngIf="utenteOrAdmin() === 'utente'" mat-menu-item (click)="openRecensionePopup()">
-          <i class="fas fa-pen menu-icon"></i>
+          <mat-icon>rate_review</mat-icon>
           <span> Lascia una recensione </span>
         </button>
 
         <button mat-menu-item (click)="logout()">
-          <i class="fas fa-sign-out-alt menu-icon"></i>
+          <mat-icon>logout</mat-icon>
           <span> Logout </span>
         </button>
       </mat-menu>
     </div>
 
-
     <div class="booking-button">
       <a class="btn" href="/prenotazione">Prenota Ora</a>
     </div>
-
   </div>
 </header>
 
-<section class="hero">
+<section class="hero" id="home">
   <div class="hero-content">
     <h2>Benvenuti nel paradiso del relax</h2>
-    <p>Un'esperienza indimenticabile nella splendida cornice della riviera italiana</p>
-    <a href="#" class="btn">Scopri le nostre offerte</a>
+    <p>Un'esperienza indimenticabile nella splendida cornice della costa ionica</p>
+    <a href="/prenotazione" class="btn">Scopri le nostre offerte</a>
   </div>
 </section>
 
@@ -100,24 +91,24 @@
     <h2 class="section-title">I Nostri Servizi</h2>
     <div class="services-grid">
       <div class="service-card">
-        <i class="fas fa-swimming-pool"></i>
+        <mat-icon>pool</mat-icon>
         <h3>Piscina Panoramica</h3>
         <p>Rilassati nella nostra piscina con vista mozzafiato sul mare</p>
       </div>
       <div class="service-card">
-        <i class="fas fa-utensils"></i>
-        <h3>Ristorante Gourmet</h3>
-        <p>Assapora i piatti della tradizione preparati dai nostri chef stellati</p>
+        <mat-icon>restaurant</mat-icon>
+        <h3>Colazione Gourmet</h3>
+        <p>Gusta sapori dolci e salati con ingredienti freschi a km 0</p>
       </div>
       <div class="service-card">
-        <i class="fas fa-spa"></i>
-        <h3>Centro Benessere</h3>
+        <mat-icon>spa</mat-icon>
+        <h3>Oasi del Benessere</h3>
         <p>Ritrova il tuo equilibrio con i nostri trattamenti wellness</p>
       </div>
       <div class="service-card">
-        <i class="fas fa-concierge-bell"></i>
-        <h3>Concierge 24/7</h3>
-        <p>Personale a tua disposizione 24 ore su 24 per ogni esigenza</p>
+        <mat-icon>waves</mat-icon>
+        <h3>Spiaggia Privata sul Mar Ionio</h3>
+        <p>Goditi la bellezza e la tranquillità della costa ionica </p>
       </div>
     </div>
   </div>
@@ -126,57 +117,30 @@
 <section class="rooms" id="camere">
   <div class="container">
     <h2 class="section-title">Le Nostre Camere</h2>
-    <div class="rooms-grid">
-      <div class="room-card">
-        <div class="room-image room1"></div>
+    <div class="rooms-scroll">
+      <div class="room-card" *ngFor="let camera of camere">
+        <div class="room-image" [ngStyle]="{ 'background-image': 'url(/assets/' + camera.id + '.jpg)' }"></div>
         <div class="room-info">
-          <h3>Camera Deluxe</h3>
-          <p>Eleganza e comfort per un soggiorno indimenticabile</p>
+          <h3>{{ camera.nome }}</h3>
+          <p>{{ camera.descrizione }}</p>
           <div class="room-features">
-            <span><i class="fas fa-user"></i> 2 persone</span>
-            <span><i class="fas fa-expand-arrows-alt"></i> 30m²</span>
-            <span><i class="fas fa-wifi"></i> Wi-Fi</span>
+            <span><mat-icon>person</mat-icon> {{ camera.postiLetto }} persone</span>
+            <span><mat-icon>open_in_full</mat-icon> {{ camera.metriQuadri }}m²</span>
+            <span><mat-icon>wifi</mat-icon> Wi-Fi</span>
           </div>
-          <a href="#" class="btn">Dettagli</a>
-        </div>
-      </div>
-      <div class="room-card">
-        <div class="room-image room2"></div>
-        <div class="room-info">
-          <h3>Suite Vista Mare</h3>
-          <p>Lusso e panorama mozzafiato per momenti indimenticabili</p>
-          <div class="room-features">
-            <span><i class="fas fa-user"></i> 2-4 persone</span>
-            <span><i class="fas fa-expand-arrows-alt"></i> 50m²</span>
-            <span><i class="fas fa-wifi"></i> Wi-Fi</span>
-          </div>
-          <a href="#" class="btn">Dettagli</a>
-        </div>
-      </div>
-      <div class="room-card">
-        <div class="room-image room3"></div>
-        <div class="room-info">
-          <h3>Family Room</h3>
-          <p>Lo spazio ideale per tutta la famiglia</p>
-          <div class="room-features">
-            <span><i class="fas fa-user"></i> 4-6 persone</span>
-            <span><i class="fas fa-expand-arrows-alt"></i> 65m²</span>
-            <span><i class="fas fa-wifi"></i> Wi-Fi</span>
-          </div>
-          <a href="#" class="btn">Dettagli</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="testimonials">
+<section class="testimonials" id="recensioni">
   <div class="container">
     <h2 class="section-title">Cosa Dicono i Nostri Ospiti</h2>
     <div class="testimonials-scroll">
       <div class="testimonial-card" *ngFor="let recensione of recensioni">
         <div class="stars">
-          <i class="fas fa-star" *ngFor="let star of [].constructor(recensione.stelle)"></i>
+          <mat-icon *ngFor="let star of [].constructor(recensione.stelle)">star</mat-icon>
         </div>
         <p class="testimonial-text">"{{ recensione.commento }}"</p>
         <p class="testimonial-author">- {{ recensione.nome }} {{ recensione.cognome }}</p>
@@ -185,51 +149,40 @@
   </div>
 </section>
 
-
 <section class="contact-section" id="contatti">
   <div class="container">
     <h2 class="section-title">Contattaci</h2>
     <div class="contact-container">
-      <div class="contact-info">
-        <div class="contact-card">
-          <i class="fas fa-map-marker-alt"></i>
-          <h3>Indirizzo</h3>
-          <p>Via Pechino, snc<br>87064, Corigliano Calabro, Italia</p>
-        </div>
-        <div class="contact-card">
-          <i class="fas fa-envelope"></i>
-          <h3>Email</h3>
-          <p>leucosialuxurysuites&#64;gmail.com</p>
-        </div>
-        <div class="contact-card">
-          <i class="fas fa-phone"></i>
-          <h3>Telefono</h3>
-          <p>+39 0983 889674</p>
-        </div>
-        <div class="contact-card">
-          <i class="fas fa-phone"></i>
-          <h3>Cellulare</h3>
-          <p>+39 389 2347941</p>
-        </div>
+      <div class="contact-card">
+        <mat-icon>location_on</mat-icon>
+        <h3>Indirizzo</h3>
+        <p>Via Pechino, snc<br>87064, Corigliano Calabro, Italia</p>
       </div>
-      <div class="contact-form">
-        <h3>Inviaci un messaggio</h3>
-        <form>
-          <div class="form-group">
-            <input type="text" placeholder="Nome" required>
-          </div>
-          <div class="form-group">
-            <input type="email" placeholder="Email" required>
-          </div>
-          <div class="form-group">
-            <textarea placeholder="Il tuo messaggio" rows="5" required></textarea>
-          </div>
-          <button type="submit" class="btn">Invia messaggio</button>
-        </form>
+      <div class="contact-card">
+        <mat-icon>email</mat-icon>
+        <h3>Email</h3>
+        <p>leucosialuxurysuites&#64;gmail.com</p>
+      </div>
+      <div class="contact-card">
+        <mat-icon>phone</mat-icon>
+        <h3>Telefono</h3>
+        <p>+39 0983 889674</p>
+      </div>
+      <div class="contact-card">
+        <mat-icon>smartphone</mat-icon>
+        <h3>Cellulare</h3>
+        <p>+39 389 2347941</p>
       </div>
     </div>
   </div>
 </section>
+
+<div *ngIf="popupMessage" class="popup-overlay">
+  <div class="popup-box">
+    <p>{{ popupMessage }}</p>
+    <button (click)="chiudiPopup()" class="btn btn-primary">OK</button>
+  </div>
+</div>
 
 <app-footer></app-footer>
 
@@ -238,5 +191,3 @@
   (closePopup)="closeRecensionePopup()"
   (submitReview)="onSubmitReview($event)">
 </app-recensione>
-
-</body>

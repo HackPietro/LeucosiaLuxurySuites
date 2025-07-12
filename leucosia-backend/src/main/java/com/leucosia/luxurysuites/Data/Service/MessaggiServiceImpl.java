@@ -4,6 +4,7 @@ import com.leucosia.luxurysuites.Config.EmailService;
 import com.leucosia.luxurysuites.Data.Dao.MessaggiDao;
 import com.leucosia.luxurysuites.Data.Entities.Messaggi;
 import com.leucosia.luxurysuites.Dto.MessaggiDto;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,18 +15,17 @@ import java.util.stream.Collectors;
 @Service
 public class MessaggiServiceImpl implements MessaggiService {
 
-    private final MessaggiDao messaggiDao;
-    private final ModelMapper modelMapper;
+    @Autowired
+    private MessaggiDao messaggiDao;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private EmailService emailService;
 
-    public MessaggiServiceImpl(MessaggiDao messaggiDao, ModelMapper modelMapper) {
-        this.messaggiDao = messaggiDao;
-        this.modelMapper = modelMapper;
-    }
-
     @Override
+    @Transactional
     public void salvaMessaggio(MessaggiDto dto) {
         Messaggi messaggio = modelMapper.map(dto, Messaggi.class);
         messaggiDao.save(messaggio);

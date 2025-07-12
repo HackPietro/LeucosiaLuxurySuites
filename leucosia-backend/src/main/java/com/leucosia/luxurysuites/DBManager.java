@@ -16,7 +16,6 @@ public class DBManager {
 
     private Connection conn = null;
 
-    // Costruttore pubblico
     public DBManager() {
     }
 

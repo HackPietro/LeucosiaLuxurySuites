@@ -7,6 +7,7 @@ import com.leucosia.luxurysuites.Data.Entities.Utente;
 import com.leucosia.luxurysuites.Dto.UtenteDto;
 import com.nimbusds.jose.JOSEException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +24,17 @@ import java.util.*;
 @Service
 public class UtenteServiceImpl implements UtenteService {
 
-    private final UtenteDao utenteDao;
-    private final ModelMapper modelMapper;
-    private final TokenStore tokenStore;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private UtenteDao utenteDao;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private TokenStore tokenStore;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private EmailService emailService;
@@ -35,15 +43,8 @@ public class UtenteServiceImpl implements UtenteService {
     @Value("${jwt.secret}")
     private String clientId;
 
-
-    public UtenteServiceImpl(UtenteDao utenteDao, ModelMapper modelMapper, TokenStore tokenStore, PasswordEncoder passwordEncoder) {
-        this.utenteDao = utenteDao;
-        this.modelMapper = modelMapper;
-        this.tokenStore = tokenStore;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Override
+    @Transactional
     public void save(Utente utente) {
         utenteDao.save(utente);
     }
@@ -73,29 +74,6 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
 
-    @Override
-    public UtenteDto getUserByToken(String token) throws ParseException, JOSEException {
-        Optional<Utente> utente = tokenStore.getUser(token);
-        if (utente.isPresent()) {
-            return modelMapper.map(utente.get(), UtenteDto.class);
-        } else {
-            throw new RuntimeException("User not found");
-        }
-    }
-
-    @Override
-    public void updatePassword(String token, String newPassword) throws ParseException, JOSEException {
-        Optional<Utente> utenteOptional = tokenStore.getUser(token);
-        if (utenteOptional.isPresent()) {
-            Utente utente = utenteOptional.get();
-            utente.getCredenziali().setPassword(passwordEncoder.encode(newPassword));
-            utenteDao.save(utente);
-        } else {
-            throw new EntityNotFoundException("User not found");
-        }
-    }
-
-
     public UserDetails loadUserByEmailForSecurity(String email) throws UsernameNotFoundException {
         Optional<Utente> utente = utenteDao.findByCredenzialiEmail(email);
         if (utente.isPresent()) {
@@ -120,6 +98,7 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
+    @Transactional
     public void recuperoPassword(String email) throws Exception {
         UtenteDto utenteDto = getByEmail(email);
 
@@ -134,7 +113,7 @@ public class UtenteServiceImpl implements UtenteService {
         String messaggio = "Ciao " + utente.getNome() + ",\n\n" +
                 "Abbiamo generato una nuova password per il tuo account: " + nuovaPassword + "\n" +
                 "Ti consigliamo di cambiarla al primo login.\n\n" +
-                "Saluti,\nIl team";
+                "Saluti,\nIl team di Leucosia Luxury Suites";
 
         emailService.inviaEmail(utente.getCredenziali().getEmail(), "Recupero Password", messaggio);
 
@@ -155,18 +134,29 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public String generaPasswordEInviaEmail(String nome, String email) throws Exception {
+    public String generaPasswordEInviaEmailDiRegistrazione(String nome, String email) throws Exception {
         String nuovaPassword = generaPasswordCasuale(10);
 
         String messaggio = "Ciao " + nome + ",\n\n" +
-                "Benvenuto in Luxury Suites!\n" +
+                "Benvenuto in Leucosia Luxury Suites!\n" +
                 "La tua password provvisoria è: " + nuovaPassword + "\n" +
                 "Ti consigliamo di cambiarla al primo accesso.\n\n" +
-                "Saluti,\nIl team";
+                "Saluti,\nIl team di Leucosia Luxury Suites";
 
         emailService.inviaEmail(email, "Benvenuto! Password temporanea", messaggio);
 
         return nuovaPassword;
+    }
+
+    @Override
+    public void inviaEmailDiLogin(String nome, String email) throws Exception {
+        String messaggio = "Ciao " + nome + ",\n\n" +
+                "Abbiamo rilevato un accesso al tuo account con l'email: " + email + ".\n" +
+                "Se sei stato tu, puoi ignorare questo messaggio.\n" +
+                "Se non riconosci questo accesso, ti consigliamo di cambiare immediatamente la tua password o di contattarci al più presto.\n\n" +
+                "Saluti,\nIl team di Leucosia Luxury Suites";
+
+        emailService.inviaEmail(email, "Notifica di accesso", messaggio);
     }
 
 }

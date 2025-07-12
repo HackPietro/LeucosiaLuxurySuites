@@ -1,29 +1,12 @@
+<app-header></app-header>
+
 <div class="messages-container">
-  <header class="messages-header">
-    <h1 class="page-title">
-      <i class="fas fa-envelope"></i>
-      Invia Messaggio
-    </h1>
-    <p class="page-subtitle">Contattaci per qualsiasi informazione o richiesta</p>
-  </header>
-
-  <!-- SUCCESSO -->
-  <div *ngIf="successMessage" class="alert alert-success" id="successAlert">
-    <i class="fas fa-check-circle"></i>
-    {{ successMessage }}
-  </div>
-
-  <!-- ERRORE -->
-  <div *ngIf="errorMessage" class="alert alert-error" id="errorAlert">
-    <i class="fas fa-exclamation-triangle"></i>
-    {{ errorMessage }}
-  </div>
 
   <!-- FORM -->
   <div class="message-form">
     <h2 class="form-title">
-      <i class="fas fa-comment-dots"></i>
-      Compila il modulo
+      <mat-icon>chat</mat-icon>
+      Richiedi Intervento
     </h2>
 
     <form (ngSubmit)="onSubmit()" #messageForm="ngForm">
@@ -39,7 +22,6 @@
           <option value="Prenotazione">Prenotazione</option>
           <option value="Informazioni">Informazioni</option>
           <option value="Reclamo">Reclamo</option>
-          <option value="Complimento">Complimento</option>
           <option value="Supporto">Supporto</option>
           <option value="Altro">Altro</option>
         </select>
@@ -58,26 +40,20 @@
       </div>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-clear" (click)="clearForm()">
-          <i class="fas fa-eraser"></i>
-          Cancella
-        </button>
         <button type="submit" class="btn btn-submit">
-          <i class="fas fa-paper-plane"></i>
+          <mat-icon>send</mat-icon>
           Invia Messaggio
         </button>
       </div>
     </form>
   </div>
+</div>
 
-  <!-- TORNA INDIETRO -->
-  <div class="back-to-home">
-    <a href="#" class="btn btn-back">
-      <i class="fas fa-arrow-left"></i>
-      Torna Indietro
-    </a>
+<div *ngIf="popupMessage" class="popup-overlay">
+  <div class="popup-box">
+    <p>{{ popupMessage }}</p>
+    <button (click)="chiudiPopup()" class="btn btn-primary">OK</button>
   </div>
 </div>
 
 <app-footer></app-footer>
-

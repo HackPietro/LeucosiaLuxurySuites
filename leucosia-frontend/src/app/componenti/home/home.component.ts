@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { AuthService } from '../../Service/AuthService';
 import { Service } from '../../Service/Service';
-import { Router } from '@angular/router';
-import {Recensione} from "../../Model/Recensione";
+import { ActivatedRoute, Router } from '@angular/router';
 import {forkJoin, map} from "rxjs";
 
 @Component({
@@ -16,13 +15,34 @@ export class HomeComponent implements OnInit {
   showRecensionePopup: boolean = false;
 
   recensioni: any[] = [];
+  camere: any[] = [];
+  ordine: { [key: number]: number } = { 2: 0, 3: 1, 4: 2 };
 
-  constructor(private router: Router, private authService: AuthService, private service: Service) {}
+  currentSection: string = 'home';
+
+  popupMessage: string = '';
+
+  constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService, private service: Service) {}
 
   ngOnInit(): void {
-    this.authService.validateToken().subscribe(isAuth => {
-      this.showMenu = isAuth;
+    this.route.fragment.subscribe(fragment => {
+      if (fragment !== null) {
+        const element = document.getElementById(fragment);
+        if (element) {
+          setTimeout(() => element.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        }
+      }
     });
+    const utente = localStorage.getItem('utente');
+    this.showMenu = !!utente;
+
+    this.service.getCamere().subscribe({
+      next: (data) => {
+        this.camere = data.sort((a, b) => this.ordine[a.postiLetto] - this.ordine[b.postiLetto]);
+      },
+      error: () => this.popupMessage = 'Errore nel caricamento delle camere'
+    });
+
 
     this.service.getRecensioni().subscribe({
       next: (data) => {
@@ -43,14 +63,31 @@ export class HomeComponent implements OnInit {
             this.recensioni = result;
           },
           error: () => {
-            console.error("Errore nel recupero delle recensioni o degli utenti");
+            this.popupMessage = 'Errore durante il recupero delle recensioni';
           }
         });
       },
       error: () => {
-        console.error("Errore durante il recupero delle recensioni");
+        this.popupMessage = 'Errore nel caricamento delle recensioni';
       }
     });
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const sections = ['home', 'servizi', 'camere', 'recensioni', 'contatti'];
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (el) {
+        const top = el.offsetTop - 120; // margin di sicurezza
+        const bottom = top + el.offsetHeight;
+        const scroll = window.scrollY;
+        if (scroll >= top && scroll < bottom) {
+          this.currentSection = id;
+          break;
+        }
+      }
+    }
   }
 
   logout(): void {
@@ -83,12 +120,16 @@ export class HomeComponent implements OnInit {
   onSubmitReview(event: { stelle: number, commento: string, utenteId: number}): void {
     const { stelle, commento, utenteId } = event;
     this.service.addRecensione(stelle, commento, utenteId).subscribe({
-      next: () => {
-        alert('Grazie per la tua recensione!');
+      next: (message) => {
+        this.popupMessage = message;
       },
       error: (err) => {
-        alert('Si è verificato un errore. Riprova più tardi.');
+        this.popupMessage = err.error;
       }
     });
+  }
+
+  chiudiPopup(): void {
+    this.popupMessage = '';
   }
 }

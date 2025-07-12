@@ -7,21 +7,20 @@ import com.nimbusds.jose.JOSEException;
 import java.text.ParseException;
 
 public interface UtenteService {
-    public void save(Utente utente);
+    void save(Utente utente);
 
     UtenteDto getById(Long id);
 
     UtenteDto getByEmail(String email);
 
-    UtenteDto getUserByToken(String token) throws ParseException, JOSEException;
-
-    void updatePassword(String token, String newPassword) throws ParseException, JOSEException;
-
     boolean emailExists(String email);
 
     void recuperoPassword(String email) throws Exception;
 
-    String generaPasswordEInviaEmail(String nome, String email) throws Exception;
+    String generaPasswordEInviaEmailDiRegistrazione(String nome, String email) throws Exception;
+
+    void inviaEmailDiLogin(String nome, String email) throws Exception;
+
 
 
 }

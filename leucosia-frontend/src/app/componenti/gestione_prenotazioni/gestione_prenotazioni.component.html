@@ -1,83 +1,82 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestione Prenotazioni</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+<app-header></app-header>
+
+<!-- Hero Section -->
+<section class="hero-title">
+  <div class="hero-content">
+    <h2><mat-icon>calendar_today</mat-icon> Gestione Prenotazioni</h2>
+    <p>Visualizza e gestisci le tue prenotazioni</p>
+  </div>
+</section>
+
+<!-- Main Container -->
 <div class="bookings-container">
-  <!-- Header -->
-  <header class="bookings-header">
-    <div class="header-content">
-      <h1 class="page-title">
-        <i class="fas fa-calendar-check"></i>
-        Gestione Prenotazioni
-      </h1>
-      <p class="page-subtitle" id="pageSubtitle">Visualizza e gestisci le tue prenotazioni</p>
-    </div>
-    <div class="header-actions">
-      <a class="btn btn-primary" href="/gestione_prenotazioni">
-        <i class="fas fa-sync-alt"></i>
-        Aggiorna
-      </a>
-    </div>
-  </header>
+  <!-- Header Actions -->
+  <div class="header-actions">
+    <a class="btn btn-primary" href="/gestione_prenotazioni">
+      <mat-icon>refresh</mat-icon> Aggiorna
+    </a>
+  </div>
 
+  <!-- Bookings List -->
   <div class="bookings-list" id="bookingsList">
-    <div *ngIf="prenotazioni.length === 0" class="no-bookings">
-      <i class="fas fa-calendar-times"></i>
-      <h3>Nessuna prenotazione trovata.</h3>
-    </div>
 
-    <div *ngFor="let p of prenotazioni" class="booking-card" >
-      <div class="booking-header">
-        <div class="booking-info">
-          <div class="booking-guest">Prenotazione #{{ p.id }}</div>
-          <div class="booking-meta">
-            <span><i class="fas fa-sign-in-alt"></i> Check-in: {{ p.dataCheckIn | date:'dd/MM/yyyy' }}</span>
-            <span><i class="fas fa-sign-out-alt"></i> Check-out: {{ p.dataCheckOut | date:'dd/MM/yyyy' }}</span>
-            <span><i class="fas fa-bed"></i> Camera: {{ p.cameraId }}</span>
-            <span><i class="fas fa-euro-sign"></i> Totale: {{ p.totale | currency:'EUR' }}</span>
-          </div>
-        </div>
+    <!-- Template se non ci sono prenotazioni -->
+    <ng-template #noPrenotazioni>
+      <div class="no-bookings">
+        <mat-icon>calendar_today</mat-icon>
+        <h3>Nessuna prenotazione trovata</h3>
+      </div>
+    </ng-template>
 
-        <div class="booking-actions">
-          <!-- Pulsante elimina -->
-          <button class="btn-delete" (click)="eliminaPrenotazione(p.id!)">
-            <i class="fas fa-trash"></i> Elimina
-          </button>
-
-          <!-- Popup hover per admin -->
-          <div *ngIf="utente?.tipologia === 'admin'" class="admin-popup-container">
-            <i class="fas fa-user-circle info-icon"></i>
-            <div class="admin-popup">
-              <ng-container *ngIf="getUtenteById(p.utenteId) as user">
-                <strong>ID Utente:</strong> {{ p.utenteId }}<br>
-                <strong>Nome:</strong> {{ user.nome || 'N/A' }}<br>
-                <strong>Cognome:</strong> {{ user.cognome || 'N/A' }}<br>
-                <strong>Telefono:</strong> {{ user.telefono || 'N/A' }}<br>
-                <strong>Email:</strong> {{ user.email || 'N/A' }}<br>
-              </ng-container>
-              <ng-container *ngIf="!getUtenteById(p.utenteId)">
-                <em>Caricamento dati utente...</em>
-              </ng-container>
+    <!-- Lista prenotazioni o fallback -->
+    <ng-container *ngIf="prenotazioni.length > 0; else noPrenotazioni">
+      <div *ngFor="let p of prenotazioni" class="booking-card">
+        <div class="booking-header">
+          <div class="booking-info">
+            <div class="booking-guest">Prenotazione n.{{ p.id }}</div>
+            <div class="booking-meta">
+              <span><mat-icon>login</mat-icon> Check-in: {{ p.dataCheckIn | date:'dd/MM/yyyy' }}</span>
+              <span><mat-icon>logout</mat-icon> Check-out: {{ p.dataCheckOut | date:'dd/MM/yyyy' }}</span>
+              <span><mat-icon>king_bed</mat-icon> Numero camera: {{ p.cameraId }}</span>
+              <span><mat-icon>euro_symbol</mat-icon> Totale: {{ p.totale | currency:'EUR' }}</span>
             </div>
+          </div>
+
+          <div class="booking-actions">
+            <!-- Popup hover per admin -->
+            <div *ngIf="utente?.tipologia === 'admin'" class="admin-popup-container">
+              <mat-icon class="info-icon" (click)="toggleUserPopup(p.id!)">account_circle</mat-icon>
+              <div class="admin-popup" *ngIf="activePopupId === p.id">
+                <ng-container *ngIf="getUtenteById(p.utenteId) as user; else loadingUser">
+                  <strong>ID Utente:</strong> {{ p.utenteId }}<br>
+                  <strong>Nome:</strong> {{ user.nome || 'N/A' }}<br>
+                  <strong>Cognome:</strong> {{ user.cognome || 'N/A' }}<br>
+                  <strong>Telefono:</strong> {{ user.telefono || 'N/A' }}<br>
+                  <strong>Email:</strong> {{ user.email || 'N/A' }}<br>
+                </ng-container>
+                <ng-template #loadingUser>
+                  <em>Caricamento dati utente...</em>
+                </ng-template>
+              </div>
+            </div>
+
+            <!-- Pulsante elimina -->
+            <button class="btn-delete" (click)="eliminaPrenotazione(p.id!)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </ng-container>
+  </div> <!-- bookings-list -->
+</div> <!-- bookings-container -->
 
-  <!-- Torna Indietro -->
-  <div class="back-to-home">
-    <a href="#" class="btn btn-back" onclick="goBack()">
-      <i class="fas fa-arrow-left"></i>
-      Torna Indietro
-    </a>
+<!-- Popup messaggi -->
+<div *ngIf="popupMessage" class="popup-overlay">
+  <div class="popup-box">
+    <p>{{ popupMessage }}</p>
+    <button (click)="chiudiPopup()" class="btn btn-primary">OK</button>
   </div>
 </div>
 
-</body>
-</html>
+<app-footer></app-footer>

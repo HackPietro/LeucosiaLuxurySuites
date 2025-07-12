@@ -9,6 +9,7 @@ import com.leucosia.luxurysuites.Dto.CameraDto;
 import com.leucosia.luxurysuites.Dto.PrezzoCameraDto;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -18,20 +19,17 @@ import java.util.stream.Collectors;
 @Service
 public class CameraServiceImpl implements CameraService {
 
-    private final CameraDao cameraDao;
+    @Autowired
+    private CameraDao cameraDao;
 
-    private final PrenotazioneDao prenotazioneDao;
+    @Autowired
+    private PrenotazioneDao prenotazioneDao;
 
-    private final ModelMapper modelMapper;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    private final PrezzoCameraDao prezzoCameraDao;
-
-    public CameraServiceImpl(CameraDao cameraDao, ModelMapper modelMapper, PrenotazioneDao prenotazioneDao, PrezzoCameraDao prezzoCameraDao) {
-        this.cameraDao = cameraDao;
-        this.prenotazioneDao = prenotazioneDao;
-        this.modelMapper = modelMapper;
-        this.prezzoCameraDao = prezzoCameraDao;
-    }
+    @Autowired
+    private PrezzoCameraDao prezzoCameraDao;
 
     @Override
     public List<CameraDto> getCamere() {

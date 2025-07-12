@@ -3,7 +3,9 @@ package com.leucosia.luxurysuites.Data.Service;
 import com.leucosia.luxurysuites.Data.Dao.NewsDao;
 import com.leucosia.luxurysuites.Data.Entities.News;
 import com.leucosia.luxurysuites.Dto.NewsDto;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,13 +15,11 @@ import java.util.stream.Collectors;
 @Service
 public class NewsServiceImpl implements NewsService {
 
-    private final NewsDao newsDao;
-    private final ModelMapper modelMapper;
+    @Autowired
+    private NewsDao newsDao;
 
-    public NewsServiceImpl(NewsDao newsDao, ModelMapper modelMapper) {
-        this.newsDao = newsDao;
-        this.modelMapper = modelMapper;
-    }
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public List<NewsDto> getAllNews() {
@@ -30,15 +30,16 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsDto createNews(NewsDto dto) {
+    @Transactional
+    public void createNews(NewsDto dto) {
         News news = modelMapper.map(dto, News.class);
         news.setId(null);
         news.setData(LocalDate.now());
-        News salvata = newsDao.save(news);
-        return modelMapper.map(salvata, NewsDto.class);
+        newsDao.save(news);
     }
 
     @Override
+    @Transactional
     public void deleteNews(Long id) {
         newsDao.deleteById(id);
     }

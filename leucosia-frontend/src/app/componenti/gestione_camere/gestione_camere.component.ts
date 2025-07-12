@@ -4,7 +4,6 @@ import { Camera } from "../../Model/Camera";
 import { Service } from "../../Service/Service";
 import { Prenotazione } from "../../Model/Prenotazione";
 import { Router } from '@angular/router';
-import { AuthService } from '../../Service/AuthService';
 
 @Component({
   selector: 'app-gestione_camere',
@@ -13,23 +12,31 @@ import { AuthService } from '../../Service/AuthService';
 })
 export class Gestione_camereComponent implements OnInit {
   gestioneForm!: FormGroup;
-
   camere: Camera[] = [];
   prezziGiornalieri: { data: string, prezzo: number }[] = [];
-
   numeroNotti: number = 0;
   tipoOperazione: 'prezzo' | 'occupazione' = 'prezzo';
+  popupMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
     private service: Service,
-    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.initializeForms();
-    this.loadCamere();
+
+    this.service.getCamere().subscribe({
+      next: camere => {
+        this.camere = camere;
+        this.setupDateChangeListeners();
+      },
+      error: err => {
+        this.popupMessage = 'Errore nel caricamento delle camere';
+      }
+    });
+
     this.setupFormChangeListener();
   }
 
@@ -42,7 +49,6 @@ export class Gestione_camereComponent implements OnInit {
       nuovoPrezzo: [0, [Validators.min(0)]],
     });
 
-    // Imposta data minima (oggi)
     const oggi = new Date().toISOString().split('T')[0];
     this.gestioneForm.get('dataInizio')?.setValue(oggi);
 
@@ -54,17 +60,15 @@ export class Gestione_camereComponent implements OnInit {
     ]);
   }
 
-  private loadCamere() {
-    this.service.getCamere().subscribe({
-      next: camere => {
-        this.camere = camere;
-        this.setupDateChangeListeners();
-      },
-      error: err => {
-        console.error('Errore caricamento camere', err);
-      }
-    });
+  dateValide(): boolean {
+    const dataInizio = this.gestioneForm.get('dataInizio')?.value;
+    const dataFine = this.gestioneForm.get('dataFine')?.value;
+    const dataInizioValida = !!this.gestioneForm.get('dataInizio')?.valid;
+    const dataFineValida = !!this.gestioneForm.get('dataFine')?.valid;
+
+    return !!dataInizio && !!dataFine && dataInizioValida && dataFineValida;
   }
+
 
   private setupDateChangeListeners() {
     this.gestioneForm.get('dataInizio')?.valueChanges.subscribe(() => this.onDateChange());
@@ -92,28 +96,18 @@ export class Gestione_camereComponent implements OnInit {
     const dataInizio = this.gestioneForm.get('dataInizio')?.value;
     const dataFine = this.gestioneForm.get('dataFine')?.value;
 
-    if (dataInizio && dataFine &&
+    if (
+      dataInizio && dataFine &&
       this.gestioneForm.get('dataInizio')?.valid &&
-      this.gestioneForm.get('dataFine')?.valid) {
-      this.caricaPrezziPeriodo();
+      this.gestioneForm.get('dataFine')?.valid
+    ) {
+      this.filtraCamereDisponibili(dataInizio, dataFine);
     } else {
+      this.camere = [];
+      this.gestioneForm.get('camera')?.setValue(null);
       this.prezziGiornalieri = [];
       this.numeroNotti = 0;
     }
-  }
-
-  gestioneDataInizio() {
-    const dataInizio = new Date(this.gestioneForm.get('dataInizio')?.value);
-    const prossimoGiorno = new Date(dataInizio);
-    prossimoGiorno.setDate(prossimoGiorno.getDate() + 1);
-
-    // Imposta la data minima per dataFine
-    const controlloDataFine = this.gestioneForm.get('dataFine');
-    if (controlloDataFine && !controlloDataFine.value) {
-      controlloDataFine.setValue(prossimoGiorno.toISOString().split('T')[0]);
-    }
-
-    this.caricaPrezziPeriodo();
   }
 
   caricaPrezziPeriodo() {
@@ -138,7 +132,18 @@ export class Gestione_camereComponent implements OnInit {
       let notti = 0;
       this.prezziGiornalieri = [];
 
-      while (current < end) {
+      // Se tipoOperazione è occupazione, consideriamo la dataFine esclusa
+      // se è prezzo, la consideriamo inclusa
+      const isOccupazione = this.tipoOperazione === 'occupazione';
+
+      while (true) {
+        // Condizione di uscita:
+        if (isOccupazione) {
+          if (current >= end) break; // dataFine esclusa
+        } else {
+          if (current > end) break; // dataFine inclusa
+        }
+
         const key = current.toISOString().split('T')[0];
         let prezzoGiornaliero = dateMap.get(key);
 
@@ -148,9 +153,9 @@ export class Gestione_camereComponent implements OnInit {
         }
 
         this.prezziGiornalieri.push({ data: key, prezzo: prezzoGiornaliero });
+        notti++;
 
         current.setDate(current.getDate() + 1);
-        notti++;
       }
 
       this.numeroNotti = notti;
@@ -219,27 +224,19 @@ export class Gestione_camereComponent implements OnInit {
       return;
     }
 
-    this.authService.validateToken().subscribe(isValid => {
-      if (!isValid) {
-        alert('Devi effettuare il login per gestire le camere.');
-        this.router.navigate(['/login']);
-        return;
-      }
+    const formVal = this.gestioneForm.value;
 
-      const formVal = this.gestioneForm.value;
-
-      if (this.tipoOperazione === 'prezzo') {
-        this.aggiornaPrezzo(formVal);
-      } else {
-        this.creaOccupazione(formVal);
-      }
-    });
+    if (this.tipoOperazione === 'prezzo') {
+      this.aggiornaPrezzo(formVal);
+    } else {
+      this.creaOccupazione(formVal);
+    }
   }
 
   private aggiornaPrezzo(formVal: any) {
     const camera = this.getCameraSelezionata();
     if (!camera || camera.id === undefined) {
-      alert('Seleziona una camera valida.');
+      this.popupMessage = 'Seleziona una camera valida.';
       return;
     }
 
@@ -249,13 +246,11 @@ export class Gestione_camereComponent implements OnInit {
 
     this.service.addPrezzoCamera(camera.id, nuovoPrezzo, dataInizio.toISOString(), dataFine.toISOString())
       .subscribe({
-        next: () => {
-          alert(`Prezzi aggiornati con successo per ${camera.nome}!`);
-          this.gestioneForm.reset();
-          this.initializeForms();
+        next: (message: string) => {
+          this.popupMessage = message;
         },
         error: (err) => {
-          console.error('Errore aggiornamento prezzi', err);
+          this.popupMessage = err.error;
         }
       });
   }
@@ -263,7 +258,7 @@ export class Gestione_camereComponent implements OnInit {
   private creaOccupazione(formVal: any) {
     const utenteJson = localStorage.getItem('utente');
     if (!utenteJson) {
-      alert('Utente non trovato. Effettua il login.');
+      this.popupMessage = 'Utente non trovato. Effettua il login.';
       this.router.navigate(['/login']);
       return;
     }
@@ -271,9 +266,12 @@ export class Gestione_camereComponent implements OnInit {
     const utente = JSON.parse(utenteJson);
     const camera = this.getCameraSelezionata();
     if (!camera || camera.id === undefined) {
-      alert('Seleziona una camera valida.');
+      this.popupMessage = 'Seleziona una camera valida.';
       return;
     }
+
+    const totaleBase = this.prezziGiornalieri.reduce((acc, giorno) => acc + giorno.prezzo, 0);
+    const totaleConSovrapprezzo = totaleBase * 1.1; // +10%
 
     // Crea una prenotazione fittizia per occupare la camera
     const prenotazioneFittizia: Prenotazione = {
@@ -281,17 +279,17 @@ export class Gestione_camereComponent implements OnInit {
       dataCheckIn: new Date(formVal.dataInizio),
       dataCheckOut: new Date(formVal.dataFine),
       cameraId: camera.id,
-      totale: 0, // Prenotazione fittizia senza costo
+      totale: Number(totaleConSovrapprezzo.toFixed(2)),
     };
 
     this.service.createPrenotazione(prenotazioneFittizia).subscribe({
-      next: () => {
-        alert(`Camera ${camera.nome} occupata dal ${formVal.dataInizio} al ${formVal.dataFine}!`);
+      next: (message) => {
+        this.popupMessage = `Camera ${camera.nome} occupata dal ${formVal.dataInizio} al ${formVal.dataFine}!`;
         this.gestioneForm.reset();
         this.initializeForms();
       },
       error: (err) => {
-        console.error('Errore creazione occupazione', err);
+        this.popupMessage = err.error;
       }
     });
   }
@@ -306,4 +304,31 @@ export class Gestione_camereComponent implements OnInit {
       }
     });
   }
+
+  getTotalePrezzi(): number {
+    const totale = this.prezziGiornalieri.reduce((acc, giorno) => acc + giorno.prezzo, 0);
+    return totale;
+  }
+
+  filtraCamereDisponibili(dataInizio: string, dataFine: string) {
+    this.service.getCamereDisponibili(dataInizio, dataFine).subscribe({
+      next: (camereDisponibili) => {
+        this.camere = camereDisponibili;
+        this.gestioneForm.get('camera')?.setValue(null);
+        this.caricaPrezziPeriodo();
+      },
+      error: (err) => {
+        this.popupMessage = 'Errore nel caricamento delle camere disponibili';
+        this.camere = [];
+        this.gestioneForm.get('camera')?.setValue(null);
+      }
+    });
+  }
+
+
+  chiudiPopup() {
+    this.popupMessage = '';
+    this.router.navigate(['/home']);
+  }
+
 }

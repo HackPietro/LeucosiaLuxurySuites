@@ -13,6 +13,8 @@ export class NewsComponent implements OnInit {
   showCreateForm = false;
   nuovaNews: Partial<News> = { titolo: '', contenuto: '', autore: '' };
 
+  popupMessage: string = '';
+
   constructor(private service : Service) { }
 
   ngOnInit(): void {
@@ -21,7 +23,7 @@ export class NewsComponent implements OnInit {
         this.news = newsList.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
       },
       error: (err) => {
-        alert('Errore nel recupero delle news dal backend');
+        this.popupMessage = 'Errore nel caricamento delle news'
       }
     });
   }
@@ -56,36 +58,28 @@ export class NewsComponent implements OnInit {
       };
 
       this.service.createNews(newNews).subscribe({
-        next: (savedNews) => {
-          this.news.unshift(savedNews); // aggiungi solo dopo conferma dal backend
-          this.resetForm();
-          this.showCreateForm = false;
-          alert('News creata con successo');
+        next: (message: string) => {
+          this.popupMessage = message;
         },
-        error: () => {
-          alert('Errore nel salvataggio della news');
+        error: (err) => {
+          this.popupMessage = err.error;
         }
       });
     }
   }
 
   eliminaNews(id: number): void {
-    if (confirm('Sei sicuro di voler eliminare questa news?')) {
-      this.news = this.news.filter(n => n.id !== id);
-
-      this.service.deleteNews(id).subscribe({
-        next: () => {
-          this.news = this.news.filter(n => n.id !== id);
-        },
-        error: (err) => {
-          alert('Errore durante l\'eliminazione:');
-        }
-      });
-
-
-      alert('News eliminata con ID:');
-    }
+    this.service.deleteNews(id).subscribe({
+      next: (message: string) => {
+        this.news = this.news.filter(n => n.id !== id);
+        this.popupMessage = message;
+      },
+      error: (err) => {
+        this.popupMessage = err.error;
+      }
+    });
   }
+
 
   private resetForm(): void {
     this.nuovaNews = {
@@ -101,5 +95,12 @@ export class NewsComponent implements OnInit {
       month: 'long',
       year: 'numeric'
     });
+  }
+
+  chiudiPopup(): void {
+    this.popupMessage = '';
+    this.resetForm();
+    this.showCreateForm = false;
+    window.location.reload();
   }
 }

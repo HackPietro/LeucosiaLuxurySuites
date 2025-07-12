@@ -10,6 +10,7 @@
   align-items: center;
   z-index: 2000;
   animation: fadeIn 0.3s ease;
+  overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -22,9 +23,10 @@
   border-radius: 8px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
   max-width: 500px;
-  width: 90%;
+  width: 100%;
   max-height: 90vh;
-  overflow-y: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
   animation: slideIn 0.3s ease;
 }
 
@@ -83,6 +85,7 @@
 .rating-section {
   text-align: center;
   margin-bottom: 25px;
+  padding: 0 20px;
 }
 
 .rating-section p {
@@ -95,11 +98,15 @@
 .stars-container {
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 12px;
+  flex-wrap: nowrap;
+  padding: 10px 0;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
 .star {
-  font-size: 2rem;
+  font-size: 1.7rem;
   color: #ddd;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -117,6 +124,8 @@
 
 .comment-section {
   margin-bottom: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .comment-section label {
@@ -129,7 +138,8 @@
 
 .comment-section textarea {
   width: 100%;
-  padding: 12px 15px;
+  box-sizing: border-box;
+  padding: 15px 15px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

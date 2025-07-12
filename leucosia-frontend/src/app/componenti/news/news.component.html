@@ -1,27 +1,31 @@
-<div class="news-container">
-  <header class="news-header">
-    <div class="header-content">
-      <h1 class="page-title">
-        <i class="fas fa-newspaper"></i>
-        News & Aggiornamenti
-      </h1>
-      <p class="page-subtitle">Resta aggiornato sulle ultime novità di Leucosia Luxury Suites</p>
-    </div>
+<app-header></app-header>
 
-    <!-- Pulsante per creare nuova news (solo admin) -->
+<!-- Sezione titolo hero -->
+<section class="hero-title">
+  <div class="hero-content">
+    <h2>
+      <mat-icon>article</mat-icon> News & Aggiornamenti
+    </h2>
+    <p>Resta aggiornato sulle ultime novità di Leucosia Luxury Suites</p>
+  </div>
+</section>
+
+<div class="news-container">
+  <!-- Pulsante per creare nuova news (solo admin) -->
+  <div class="news-header">
     <div *ngIf="utenteOrAdmin() === 'admin'" class="admin-actions">
       <button class="btn btn-create" (click)="toggleCreateForm()">
-        <i class="fas fa-plus"></i>
+        <mat-icon>add</mat-icon>
         {{ showCreateForm ? 'Annulla' : 'Nuova News' }}
       </button>
     </div>
-  </header>
+  </div>
 
   <!-- Form per creare nuova news (solo admin) -->
   <div *ngIf="showCreateForm && utenteOrAdmin() === 'admin'" class="create-news-form">
     <div class="form-container">
       <h2 class="form-title">
-        <i class="fas fa-edit"></i>
+        <mat-icon>edit</mat-icon>
         Crea Nuova News
       </h2>
 
@@ -64,11 +68,11 @@
 
         <div class="form-actions">
           <button type="button" class="btn btn-cancel" (click)="toggleCreateForm()">
-            <i class="fas fa-times"></i>
+            <mat-icon>close</mat-icon>
             Annulla
           </button>
           <button type="submit" class="btn btn-submit" [disabled]="!newsForm.form.valid">
-            <i class="fas fa-save"></i>
+            <mat-icon>save</mat-icon>
             Pubblica News
           </button>
         </div>
@@ -79,26 +83,27 @@
   <!-- Lista delle news -->
   <div class="news-list">
     <div *ngIf="news.length === 0" class="no-news">
-      <i class="fas fa-newspaper"></i>
-      <h3>Nessuna news disponibile</h3>
-      <p>Non ci sono ancora news pubblicate.</p>
+      <mat-icon>article</mat-icon>
+      <h3>Nessuna news trovata</h3>
     </div>
 
     <div *ngFor="let newsItem of news" class="news-card">
       <div class="news-meta">
-        <div class="news-date">
-          <i class="fas fa-calendar-alt"></i>
-          {{ formatDate(newsItem.data) }}
-        </div>
-        <div class="news-author">
-          <i class="fas fa-user"></i>
-          {{ newsItem.autore }}
+        <div class="news-info">
+          <div class="news-author">
+            <mat-icon>person</mat-icon>
+            {{ newsItem.autore }}
+          </div>
+          <div class="news-date">
+            <mat-icon>calendar_today</mat-icon>
+            {{ formatDate(newsItem.data) }}
+          </div>
         </div>
 
         <!-- Pulsante elimina (solo admin) -->
         <div *ngIf="utenteOrAdmin() === 'admin'" class="news-actions">
-          <button class="btn-delete" (click)="newsItem.id !== undefined && eliminaNews(newsItem.id!)" title="Elimina news">
-            <i class="fas fa-trash"></i>
+          <button class="btn-delete" (click)="newsItem.id !== undefined && eliminaNews(newsItem.id!)">
+            <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
@@ -107,21 +112,15 @@
         <h2 class="news-title">{{ newsItem.titolo }}</h2>
         <p class="news-text">{{ newsItem.contenuto }}</p>
       </div>
-
-      <div class="news-footer">
-        <div class="news-id">ID: #{{ newsItem.id }}</div>
-      </div>
     </div>
   </div>
+</div>
 
-  <!-- Pulsante torna alla home -->
-  <div class="back-to-home">
-    <a routerLink="/" class="btn btn-back">
-      <i class="fas fa-arrow-left"></i>
-      Torna alla Home
-    </a>
+<div *ngIf="popupMessage" class="popup-overlay">
+  <div class="popup-box">
+    <p>{{ popupMessage }}</p>
+    <button (click)="chiudiPopup()" class="btn btn-primary">OK</button>
   </div>
 </div>
 
 <app-footer></app-footer>
-

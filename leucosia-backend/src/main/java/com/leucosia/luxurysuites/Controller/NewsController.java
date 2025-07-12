@@ -3,9 +3,9 @@ package com.leucosia.luxurysuites.Controller;
 import com.leucosia.luxurysuites.Data.Service.NewsService;
 import com.leucosia.luxurysuites.Dto.NewsDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,14 +25,27 @@ public class NewsController {
     }
 
     @PostMapping
-    public NewsDto createNews(@RequestBody NewsDto newsDto) {
-        return newsService.createNews(newsDto);
+    public ResponseEntity<String> createNews(@RequestBody NewsDto newsDto) {
+        try {
+            newsService.createNews(newsDto);
+            return ResponseEntity.ok("News creata con successo.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la creazione della news.");
+        }
     }
-
 
     @DeleteMapping("/{id}")
-    public void deleteNews(@PathVariable Long id) {
-        newsService.deleteNews(id);
+    public ResponseEntity<String> deleteNews(@PathVariable Long id) {
+        try {
+            newsService.deleteNews(id);
+            return ResponseEntity.ok("News eliminata con successo.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Errore durante l'eliminazione della news.");
+        }
     }
+
 
 }

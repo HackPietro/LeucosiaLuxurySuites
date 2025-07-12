@@ -5,7 +5,6 @@ import com.leucosia.luxurysuites.Data.Dao.CameraDao;
 import com.leucosia.luxurysuites.Data.Dao.PrenotazioneDao;
 import com.leucosia.luxurysuites.Data.Dao.UtenteDao;
 import com.leucosia.luxurysuites.Data.Entities.Camera;
-import com.leucosia.luxurysuites.Data.Entities.News;
 import com.leucosia.luxurysuites.Data.Entities.Prenotazione;
 import com.leucosia.luxurysuites.Data.Entities.Utente;
 import com.leucosia.luxurysuites.Dto.PrenotazioneDto;
@@ -21,25 +20,24 @@ import java.util.stream.Collectors;
 @Service
 public class PrenotazioneServiceImpl implements PrenotazioneService {
 
-    private final PrenotazioneDao prenotazioneDao;
-    private final CameraDao cameraDao;
-    private final UtenteDao utenteDao;
-    private final ModelMapper modelMapper;
+    @Autowired
+    private PrenotazioneDao prenotazioneDao;
+
+    @Autowired
+    private CameraDao cameraDao;
+
+    @Autowired
+    private UtenteDao utenteDao;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     private  EmailService emailService;
 
-    public PrenotazioneServiceImpl(PrenotazioneDao prenotazioneDao, ModelMapper modelMapper,
-                                   CameraDao cameraDao, UtenteDao utenteDao) {
-        this.prenotazioneDao = prenotazioneDao;
-        this.modelMapper = modelMapper;
-        this.cameraDao = cameraDao;
-        this.utenteDao = utenteDao;
-    }
-
     @Override
     @Transactional
-    public PrenotazioneDto createPrenotazione(PrenotazioneDto dto) {
+    public void createPrenotazione(PrenotazioneDto dto) {
         if (dto == null) {
             throw new IllegalArgumentException("PrenotazioneDto non può essere null");
         }
@@ -74,12 +72,12 @@ public class PrenotazioneServiceImpl implements PrenotazioneService {
             String messaggio = "Ciao " + utente.getNome() + ",\n\n" +
                     "La tua prenotazione è stata confermata con successo.\n" +
                     "Di seguito i dettagli:\n" +
-                    "- Data: " + salvata.getDataCheckIn() + "\n" +
-                    "- Data: " + salvata.getDataCheckOut() + "\n" +
-                    "- Camera: " + salvata.getCamera() + "\n\n" +
+                    "- Data check-in: " + salvata.getDataCheckIn() + "\n" +
+                    "- Data check-out: " + salvata.getDataCheckOut() + "\n" +
+                    "- Camera: " + salvata.getCamera().getNome() + "\n\n" +
                     "- Totale da pagare al check-in: " + salvata.getTotale() + "\n\n" +
-                    "Grazie per aver scelto il nostro servizio!\n\n" +
-                    "Saluti,\nIl team";
+                    "Grazie per averci scelto!\n\n" +
+                    "Saluti,\nIl team di Leucosia Luxury Suites";
 
             emailService.inviaEmail(
                     utente.getCredenziali().getEmail(),
@@ -87,16 +85,6 @@ public class PrenotazioneServiceImpl implements PrenotazioneService {
                     messaggio
             );
         }
-
-        // Mappa a DTO (assumendo ci sia un costruttore o metodo di conversione)
-        return new PrenotazioneDto(
-                salvata.getId(),
-                salvata.getUtente().getId(),
-                salvata.getDataCheckIn(),
-                salvata.getDataCheckOut(),
-                salvata.getCamera().getId(),
-                salvata.getTotale()
-        );
     }
 
     @Override
@@ -122,12 +110,34 @@ public class PrenotazioneServiceImpl implements PrenotazioneService {
     }
 
     @Override
+    @Transactional
     public void eliminaPrenotazione(Long id) {
-        System.out.println("Eliminazione prenotazione con ID: " + id);
         if (id == null) {
             throw new IllegalArgumentException("L'id della prenotazione non può essere null");
         }
+
+        Prenotazione prenotazione = prenotazioneDao.findById(id)
+                .orElseThrow(() -> new RuntimeException("Prenotazione non trovata con id: " + id));
+
+        Utente utente = prenotazione.getUtente();
+        String messaggio = "Ciao " + utente.getNome() + ",\n\n" +
+                "La tua prenotazione è stata cancellata con successo.\n" +
+                "Di seguito i dettagli della prenotazione cancellata:\n" +
+                "- Data check-in: " + prenotazione.getDataCheckIn() + "\n" +
+                "- Data check-out: " + prenotazione.getDataCheckOut() + "\n" +
+                "- Camera: " + prenotazione.getCamera().getNome() + "\n\n" +
+                "Ci dispiace per l'inconveniente e speriamo di poterti servire in futuro.\n\n" +
+                "Saluti,\nIl team di Leucosia Luxury Suites";
+
+        emailService.inviaEmail(
+                utente.getCredenziali().getEmail(),
+                "Cancellazione Prenotazione",
+                messaggio
+        );
+
+        // Elimina la prenotazione
         prenotazioneDao.deleteById(id);
     }
+
 
 }

@@ -1,24 +1,25 @@
-<div class="container">
-    <div style="text-align:center;">
-        <h2>Registrati</h2>
-    </div>
+<app-header></app-header>
 
-    <div *ngIf="errorMessage" class="error-message">
-      <p>{{ errorMessage }}</p>
-    </div>
-    <div *ngIf="successMessage" class="success-message">
-      <p>{{ successMessage }}</p>
-    </div>
-    <form class="form" (ngSubmit)="onSubmit()" #registrationForm="ngForm">
-        <input type="text" name="nome" [(ngModel)]="nome" placeholder="Nome" required (input)="clearError()">
-        <input type="text" name="cognome" [(ngModel)]="cognome" placeholder="Cognome" required (input)="clearError()">
-        <input type="text" name="telefono" [(ngModel)]="telefono" placeholder="Telefono" required (input)="clearError()">
-        <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required (input)="clearError()">
-        <button type="submit">Registrati</button>
-        <button type="button" routerLink="/login">Accedi</button>
-        <button type="button" routerLink="/">Torna alla home</button>
-    </form>
+<div class="container">
+  <div style="text-align: center;">
+    <h2>Registrati</h2>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p>{{ errorMessage }}</p>
+  </div>
+  <div *ngIf="successMessage" class="success-message">
+    <p>{{ successMessage }}</p>
+  </div>
+
+  <form class="form" (ngSubmit)="onSubmit()" #registrationForm="ngForm">
+    <input type="text" name="nome" [(ngModel)]="nome" placeholder="Nome" required (input)="clearError()">
+    <input type="text" name="cognome" [(ngModel)]="cognome" placeholder="Cognome" required (input)="clearError()">
+    <input type="text" name="telefono" [(ngModel)]="telefono" placeholder="Telefono" required (input)="clearError()">
+    <input type="email" name="email" [(ngModel)]="email" placeholder="Email" required (input)="clearError()">
+    <button type="submit">Registrati</button>
+    <button type="button" routerLink="/login">Accedi</button>
+  </form>
 </div>
 
 <app-footer></app-footer>
-

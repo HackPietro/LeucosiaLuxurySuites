@@ -8,8 +8,6 @@ import { Messaggio } from '../../Model/Messaggio';
   styleUrls: ['./richiedi_intervento.component.css']
 })
 export class Richiedi_interventoComponent implements OnInit {
-  errorMessage = '';
-  successMessage = '';
 
   nome = '';
   cognome = '';
@@ -17,7 +15,7 @@ export class Richiedi_interventoComponent implements OnInit {
   tipologia = '';
   contenutoMessaggio = '';
 
-  messaggio: Messaggio[] = [];
+  popupMessage: string = '';
 
   constructor(private service: Service) {}
 
@@ -32,16 +30,10 @@ export class Richiedi_interventoComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.popupMessage = '';
 
     if (!this.nome || !this.cognome || !this.email || !this.tipologia || !this.contenutoMessaggio) {
-      this.errorMessage = 'Tutti i campi sono obbligatori';
-      return;
-    }
-
-    if (!this.isValidEmail(this.email)) {
-      this.errorMessage = 'Formato email non valido';
+      this.popupMessage = 'Tutti i campi sono obbligatori';
       return;
     }
 
@@ -55,20 +47,14 @@ export class Richiedi_interventoComponent implements OnInit {
     };
 
     this.service.inviaMessaggio(nuovoMessaggio).subscribe({
-      next: () => {
-        this.successMessage = 'Messaggio inviato con successo!';
-        this.messaggio.push(nuovoMessaggio);
+      next: (message: string) => {
+        this.popupMessage = message;
         this.clearForm();
       },
-      error: () => {
-        this.errorMessage = 'Errore durante l’invio del messaggio. Riprova più tardi.';
+      error: (err) => {
+        this.popupMessage = err.error;
       }
     });
-  }
-
-  isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   }
 
   clearForm(): void {
@@ -78,4 +64,9 @@ export class Richiedi_interventoComponent implements OnInit {
     this.tipologia = '';
     this.contenutoMessaggio = '';
   }
+
+  chiudiPopup(): void {
+    this.popupMessage = '';
+  }
+
 }

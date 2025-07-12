@@ -1,10 +1,10 @@
 package com.leucosia.luxurysuites.Controller;
 
 import com.leucosia.luxurysuites.Data.Service.PrenotazioneService;
-import com.leucosia.luxurysuites.Dto.NewsDto;
 import com.leucosia.luxurysuites.Dto.PrenotazioneDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +19,13 @@ public class PrenotazioneController {
     private PrenotazioneService prenotazioneService;
 
     @PostMapping
-    public PrenotazioneDto createPrenotazione(@RequestBody PrenotazioneDto prenotazioneDto) {
+    public ResponseEntity<String> createPrenotazione(@RequestBody PrenotazioneDto prenotazioneDto) {
         try {
-            return prenotazioneService.createPrenotazione(prenotazioneDto);
+            prenotazioneService.createPrenotazione(prenotazioneDto);
+            return ResponseEntity.ok("Prenotazione creata con successo.");
         } catch (Exception e) {
             e.printStackTrace();
-            throw e;
+            return ResponseEntity.status(500).body("Errore durante la creazione della prenotazione.");
         }
     }
 
@@ -39,8 +40,13 @@ public class PrenotazioneController {
     }
 
     @DeleteMapping("/{id}")
-    public void eliminaPrenotazione(@PathVariable Long id) {
-        System.out.println("Eliminazione prenotazione con ID: " + id);
-        prenotazioneService.eliminaPrenotazione(id);
+    public ResponseEntity<String> eliminaPrenotazione(@PathVariable Long id) {
+        try {
+            prenotazioneService.eliminaPrenotazione(id);
+            return ResponseEntity.ok("Prenotazione eliminata con successo.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Errore durante l'eliminazione della prenotazione.");
+        }
     }
 }

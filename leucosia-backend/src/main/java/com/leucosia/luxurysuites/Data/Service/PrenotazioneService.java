@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PrenotazioneService {
 
-    PrenotazioneDto createPrenotazione(PrenotazioneDto prenotazioneDto);
+    void createPrenotazione(PrenotazioneDto prenotazioneDto);
     List<PrenotazioneDto> getPrenotazioni();
     List<PrenotazioneDto> getPrenotazioniByUtenteId(Long id);
     void eliminaPrenotazione(Long id);

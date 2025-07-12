@@ -1,19 +1,20 @@
+<app-header></app-header>
+
+<!-- Sezione titolo hero -->
+<section class="hero-title">
+  <div class="hero-content">
+    <h2><mat-icon>inbox</mat-icon> Gestione Messaggi</h2>
+    <p>Visualizza e gestisci tutti i messaggi ricevuti</p>
+  </div>
+</section>
+
 <div class="messages-container">
-  <header class="messages-header">
-    <div class="header-content">
-      <h1 class="page-title">
-        <i class="fas fa-inbox"></i>
-        Gestione Messaggi
-      </h1>
-      <p class="page-subtitle">Visualizza e gestisci tutti i messaggi ricevuti</p>
-    </div>
-    <div class="header-actions">
-      <a class="btn btn-primary" href="/gestione_messaggi">
-        <i class="fas fa-sync-alt"></i>
-        Aggiorna
-      </a>
-    </div>
-  </header>
+  <div class="header-actions">
+    <a class="btn btn-primary" href="/gestione_messaggi">
+      <mat-icon>refresh</mat-icon>
+      Aggiorna
+    </a>
+  </div>
 
   <div class="messages-list" id="messagesList">
     <!-- Mostra se ci sono messaggi -->
@@ -25,13 +26,13 @@
               {{ messaggio.nome }} {{ messaggio.cognome }} ({{ messaggio.email }})
             </h4>
             <div class="message-meta">
-              <span><i class="fas fa-tag"></i> {{ messaggio.tipologia }}</span>
-              <span><i class="fas fa-calendar-alt"></i> {{ messaggio.data | date }}</span>
+              <span><mat-icon>label</mat-icon> {{ messaggio.tipologia }}</span>
+              <span><mat-icon>calendar_today</mat-icon> {{ messaggio.data | date }}</span>
             </div>
           </div>
           <div class="message-actions" *ngIf="messaggio.id !== undefined">
             <button class="btn-delete" (click)="eliminaMessaggio(messaggio.id!)">
-              <i class="fas fa-trash-alt"></i> Elimina
+              <mat-icon>delete</mat-icon>
             </button>
           </div>
         </div>
@@ -44,18 +45,17 @@
     <!-- Template alternativo se non ci sono messaggi -->
     <ng-template #noMessages>
       <div class="no-messages">
-        <i class="fas fa-inbox"></i>
+        <mat-icon>inbox</mat-icon>
         <h3>Nessun messaggio trovato</h3>
-        <p>Non ci sono messaggi che corrispondono ai criteri di ricerca.</p>
       </div>
     </ng-template>
   </div>
+</div>
 
-  <div class="back-to-home">
-    <a href="#" class="btn btn-back">
-      <i class="fas fa-arrow-left"></i>
-      Torna Indietro
-    </a>
+<div *ngIf="popupMessage" class="popup-overlay">
+  <div class="popup-box">
+    <p>{{ popupMessage }}</p>
+    <button (click)="chiudiPopup()" class="btn btn-primary">OK</button>
   </div>
 </div>
 

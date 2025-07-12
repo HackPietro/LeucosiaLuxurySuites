@@ -12,6 +12,10 @@ export class Gestione_prenotazioniComponent implements OnInit {
   utente: Utente | null = null;
   datiUtenti: { [id: number]: Utente } = {};
 
+  popupMessage: string = '';
+  activePopupId: number | null = null;
+
+
 
   constructor(private service: Service){}
   ngOnInit() {
@@ -46,18 +50,14 @@ export class Gestione_prenotazioniComponent implements OnInit {
 
 
   eliminaPrenotazione(id: number) {
-    if (confirm('Sei sicuro di voler eliminare questa prenotazione?')) {
-      this.service.eliminaPrenotazione(id).subscribe({
-        next: () => {
-          alert('Prenotazione eliminata con successo');
-          this.caricaPrenotazioni();
-        },
-        error: (err) => {
-          console.error('Errore durante l\'eliminazione della prenotazione:', err);
-          alert('Si è verificato un errore durante l\'eliminazione della prenotazione');
-        }
-      });
-    }
+    this.service.eliminaPrenotazione(id).subscribe({
+      next: (message) => {
+        this.popupMessage = message;
+      },
+      error: (err) => {
+        this.popupMessage = err.error;
+      }
+    });
   }
 
   private ordinaPrenotazioni(prenotazioni: Prenotazione[]): Prenotazione[] {
@@ -70,5 +70,17 @@ export class Gestione_prenotazioniComponent implements OnInit {
     return this.datiUtenti[id] || null;
   }
 
+  toggleUserPopup(bookingId: number) {
+    if (this.activePopupId === bookingId) {
+      this.activePopupId = null; // chiudi se è già aperto
+    } else {
+      this.activePopupId = bookingId; // apri popup per quella prenotazione
+    }
+  }
+
+  chiudiPopup() {
+    this.popupMessage = '';
+    this.caricaPrenotazioni();
+  }
 
 }

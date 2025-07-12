@@ -35,21 +35,6 @@ export class AuthService {
     );
   }
 
-  validateToken(): Observable<boolean> {
-    return this.http.post<{ valid: boolean }>(`${this.baseUrl}/validateToken`, {}, {
-      withCredentials: true
-    }).pipe(
-      tap(response => {
-        this.isLoggedIn = response.valid;
-      }),
-      map(response => response.valid),
-      catchError(() => {
-        this.isLoggedIn = false;
-        return of(false);
-      })
-    );
-  }
-
   logout(): void {
     this.http.post(`${this.baseUrl}/doLogout`, {}, { withCredentials: true }).subscribe(() => {
       this.isLoggedIn = false;
