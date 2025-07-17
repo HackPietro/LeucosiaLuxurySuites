@@ -24,6 +24,8 @@ export class PrenotazioneComponent implements OnInit {
   numeroNotti: number = 0;
 
   popupMessage: string = '';
+  loading = false;
+
 
   constructor(private fb: FormBuilder, private service: Service, private authService: AuthService,
               private router: Router) {}
@@ -31,13 +33,16 @@ export class PrenotazioneComponent implements OnInit {
   ngOnInit() {
     this.initializeForms();
 
+    this.loading = true;
     this.service.getCamere().subscribe({
       next: camere => {
         this.camere = camere; // Corretto: non lasciarlo vuoto
         this.setupDateChangeListeners();
+        this.loading = false;
       },
       error: err => {
         this.popupMessage = 'Errore nel caricamento delle camere';
+        this.loading = false;
       }
     });
 
@@ -103,16 +108,19 @@ export class PrenotazioneComponent implements OnInit {
   }
 
   filtraCamereDisponibili(checkIn: string, checkOut: string) {
+    this.loading = true;
     this.service.getCamereDisponibili(checkIn, checkOut).subscribe({
       next: (camereDisponibili) => {
         this.camere = camereDisponibili;
         this.prenotazioneForm.get('camera')?.setValue(null); // Reset camera selezionata
         this.calcolaPrezzoTotale();
+        this.loading = false;
       },
       error: (err) => {
         this.camere = [];
         this.prenotazioneForm.get('camera')?.setValue(null);
         this.popupMessage = 'Errore nel caricamento delle camere disponibili';
+        this.loading = false;
       }
     });
   }
@@ -192,6 +200,7 @@ export class PrenotazioneComponent implements OnInit {
     const startStr = checkIn.toISOString().split('T')[0];
     const endStr = checkOut.toISOString().split('T')[0];
 
+    this.loading = true;
     this.service.getPrezziCamera(cameraId, startStr, endStr).subscribe(prezzi => {
       const dateMap = new Map(prezzi.map(p => [p.data, p.prezzo]));
 
@@ -221,6 +230,7 @@ export class PrenotazioneComponent implements OnInit {
       this.prezzoBase = totale;
       this.sovrapprezzoSpese = totale * 0.10;
       this.prezzoTotale = totale + this.sovrapprezzoSpese;
+      this.loading = false;
     });
   }
 
@@ -284,12 +294,15 @@ export class PrenotazioneComponent implements OnInit {
       totale: this.prezzoTotale
     };
 
+    this.loading = true;
     this.service.createPrenotazione(prenotazione).subscribe({
       next: (message) => {
         this.popupMessage = message;
+        this.loading = false;
       },
       error: (err) => {
         this.popupMessage = err.error;
+        this.loading = false;
       }
     });
   }

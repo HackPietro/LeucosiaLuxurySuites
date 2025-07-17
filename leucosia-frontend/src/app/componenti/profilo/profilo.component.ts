@@ -23,6 +23,7 @@ export class ProfiloComponent implements OnInit{
   passwordValue: string = '';
   tipologiaValue: string = '';
 
+  loading = false;
   smallDevice: boolean = false;
 
 
@@ -60,20 +61,37 @@ export class ProfiloComponent implements OnInit{
   }
 
   sendToServer(): void {
-    this.authService.updateUtente(this.emailValue, {
+    this.loading = true;
+
+    // Controllo se la password è stata modificata
+    const passwordModificata = this.passwordValue && this.passwordValue.trim() !== '';
+
+    // Costruzione oggetto aggiornamento
+    const updatedData: any = {
       nome: this.nomeValue,
       cognome: this.cognomeValue,
       telefono: this.telefonoValue,
       email: this.emailValue,
-      password: this.passwordValue,
       tipologia: this.tipologiaValue,
-    }).subscribe({
+    };
+
+    if (passwordModificata) {
+      updatedData.password = this.passwordValue;
+    }
+
+    this.authService.updateUtente(this.emailValue, updatedData).subscribe({
       next: () => {
-        // Logout: cancella cookie o token
-        this.authService.logout(); // o metodo per rimuovere sessione
-        this.router.navigate(['/login']);
+        this.loading = false;
+
+        if (passwordModificata) {
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        } else {
+          this.isEditing = false; // Esce dalla modalità modifica
+        }
       },
       error: (err) => {
+        this.loading = false;
         console.error('Errore durante aggiornamento utente:', err);
       }
     });

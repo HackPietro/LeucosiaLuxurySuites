@@ -22,6 +22,11 @@ export class HomeComponent implements OnInit {
 
   popupMessage: string = '';
 
+  loadingCamere = false;
+  loadingRecensioni = false;
+  loadingSubmit = false;
+
+
   constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService, private service: Service) {}
 
   ngOnInit(): void {
@@ -36,13 +41,19 @@ export class HomeComponent implements OnInit {
     const utente = localStorage.getItem('utente');
     this.showMenu = !!utente;
 
+    this.loadingCamere = true;
     this.service.getCamere().subscribe({
       next: (data) => {
         this.camere = data.sort((a, b) => this.ordine[a.postiLetto] - this.ordine[b.postiLetto]);
+        this.loadingCamere = false;
       },
-      error: () => this.popupMessage = 'Errore nel caricamento delle camere'
+      error: () => {
+        this.popupMessage = 'Errore nel caricamento delle camere';
+        this.loadingCamere = false;
+      }
     });
 
+    this.loadingRecensioni = true;
 
     this.service.getRecensioni().subscribe({
       next: (data) => {
@@ -61,14 +72,17 @@ export class HomeComponent implements OnInit {
         forkJoin(recensioniConUtente).subscribe({
           next: (result) => {
             this.recensioni = result;
+            this.loadingRecensioni = false;
           },
           error: () => {
             this.popupMessage = 'Errore durante il recupero delle recensioni';
+            this.loadingRecensioni = false;
           }
         });
       },
       error: () => {
         this.popupMessage = 'Errore nel caricamento delle recensioni';
+        this.loadingRecensioni = false;
       }
     });
   }
@@ -119,12 +133,18 @@ export class HomeComponent implements OnInit {
 
   onSubmitReview(event: { stelle: number, commento: string, utenteId: number}): void {
     const { stelle, commento, utenteId } = event;
+    this.loadingSubmit = true;
+
     this.service.addRecensione(stelle, commento, utenteId).subscribe({
       next: (message) => {
         this.popupMessage = message;
+        this.loadingSubmit = false;
+        this.closeRecensionePopup();
+        this.ngOnInit()
       },
       error: (err) => {
         this.popupMessage = err.error;
+        this.loadingSubmit = false;
       }
     });
   }

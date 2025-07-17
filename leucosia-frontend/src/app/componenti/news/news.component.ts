@@ -14,16 +14,20 @@ export class NewsComponent implements OnInit {
   nuovaNews: Partial<News> = { titolo: '', contenuto: '', autore: '' };
 
   popupMessage: string = '';
+  loading: boolean = false;
 
   constructor(private service : Service) { }
 
   ngOnInit(): void {
+    this.loading = true;
     this.service.getAllNews().subscribe({
       next: (newsList) => {
         this.news = newsList.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
+        this.loading = false;
       },
       error: (err) => {
-        this.popupMessage = 'Errore nel caricamento delle news'
+        this.popupMessage = 'Errore nel caricamento delle news';
+        this.loading = false;
       }
     });
   }
@@ -57,12 +61,17 @@ export class NewsComponent implements OnInit {
         autore: this.nuovaNews.autore
       };
 
+      this.loading = true;
       this.service.createNews(newNews).subscribe({
         next: (message: string) => {
           this.popupMessage = message;
+          this.loading = false;
+          this.toggleCreateForm();
+          this.ngOnInit();
         },
         error: (err) => {
           this.popupMessage = err.error;
+          this.loading = false;
         }
       });
     }

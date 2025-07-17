@@ -18,12 +18,15 @@ export class RegistrationComponent {
   tipologia = 'utente';
   errorMessage = '';
   successMessage = '';
+  loading = false;
+
 
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
     this.errorMessage = '';
     this.successMessage = '';
+    this.loading = true;
 
     // Controllo campi compilati
     if (!this.nome || !this.cognome || !this.telefono || !this.email) {
@@ -47,10 +50,12 @@ export class RegistrationComponent {
 
     this.authService.doRegistration(utente).subscribe({
       next: (res) => {
+        this.loading = false;
         this.successMessage = 'Registrazione avvenuta con successo. Abbiamo inviato una email contenente la password. Ti consigliamo di cambiarla al primo accesso.';
         setTimeout(() => this.router.navigate(['/login']), 3500);
       },
       error: (err) => {
+        this.loading = false;
         // Gestione errore specifico se email già presente
         if (err.error?.error === 'Email già registrata') {
           this.errorMessage = 'Email già registrata, accedi o usa un\'altra email';

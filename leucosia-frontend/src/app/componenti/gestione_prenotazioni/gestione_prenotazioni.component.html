@@ -71,6 +71,11 @@
   </div> <!-- bookings-list -->
 </div> <!-- bookings-container -->
 
+<div *ngIf="loading" class="loading-overlay">
+  <div class="spinner"></div>
+  <p>Caricamento...</p>
+</div>
+
 <!-- Popup messaggi -->
 <div *ngIf="popupMessage" class="popup-overlay">
   <div class="popup-box">

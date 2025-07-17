@@ -23,11 +23,26 @@
       <div class="field">
         <label for="password">Password:</label>
         <div class="password-input-container">
-          <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="passwordValue" [disabled]="!isEditing" />
-          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()" [disabled]="!isEditing">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="passwordValue"
+            [disabled]="!isEditing"
+            placeholder="Nuova password (opzionale)"
+          />
+
+          <!-- L'icona si mostra solo se c'è un valore -->
+          <button
+            *ngIf="passwordValue"
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            [disabled]="!isEditing"
+          >
             <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
         </div>
+
       </div>
       <div class="field" style="pointer-events: none;">
         <label for="tipologia">Tipologia:</label>
@@ -39,6 +54,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- OVERLAY DI CARICAMENTO -->
+<div *ngIf="loading" class="loading-overlay">
+  <div class="spinner"></div>
+  <p>Caricamento...</p>
 </div>
 
 <app-footer></app-footer>

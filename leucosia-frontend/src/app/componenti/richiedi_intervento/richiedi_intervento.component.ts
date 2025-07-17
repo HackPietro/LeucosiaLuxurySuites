@@ -16,6 +16,8 @@ export class Richiedi_interventoComponent implements OnInit {
   contenutoMessaggio = '';
 
   popupMessage: string = '';
+  loading = false;
+
 
   constructor(private service: Service) {}
 
@@ -37,6 +39,8 @@ export class Richiedi_interventoComponent implements OnInit {
       return;
     }
 
+    this.loading = true;
+
     const nuovoMessaggio: Messaggio = {
       nome: this.nome,
       cognome: this.cognome,
@@ -48,10 +52,12 @@ export class Richiedi_interventoComponent implements OnInit {
 
     this.service.inviaMessaggio(nuovoMessaggio).subscribe({
       next: (message: string) => {
+        this.loading = false;
         this.popupMessage = message;
         this.clearForm();
       },
       error: (err) => {
+        this.loading = false;
         this.popupMessage = err.error;
       }
     });

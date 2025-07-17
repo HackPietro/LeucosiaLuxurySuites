@@ -14,7 +14,7 @@ export class Gestione_prenotazioniComponent implements OnInit {
 
   popupMessage: string = '';
   activePopupId: number | null = null;
-
+  loading = false;
 
 
   constructor(private service: Service){}
@@ -24,38 +24,85 @@ export class Gestione_prenotazioniComponent implements OnInit {
   }
 
   caricaPrenotazioni() {
+    this.loading = true;
+
     if (this.utente?.tipologia === 'admin') {
-      this.service.getPrenotazioni().subscribe((res: Prenotazione[]) => {
-        this.prenotazioni = this.ordinaPrenotazioni(res);
-        this.caricaUtentiAssociati(this.prenotazioni);
+      this.service.getPrenotazioni().subscribe({
+        next: (res: Prenotazione[]) => {
+          this.prenotazioni = this.ordinaPrenotazioni(res);
+          this.caricaUtentiAssociati(this.prenotazioni);
+          this.loading = false;
+        },
+        error: (err) => {
+          this.popupMessage = 'Errore nel caricamento delle prenotazioni';
+          this.loading = false;
+        }
       });
     } else {
-      this.service.getPrenotazioniUtente(this.utente?.id!).subscribe((res: Prenotazione[]) => {
-        this.prenotazioni = this.ordinaPrenotazioni(res);
+      this.service.getPrenotazioniUtente(this.utente?.id!).subscribe({
+        next: (res: Prenotazione[]) => {
+          this.prenotazioni = this.ordinaPrenotazioni(res);
+          this.loading = false;
+        },
+        error: (err) => {
+          this.popupMessage = 'Errore nel caricamento delle prenotazioni';
+          this.loading = false;
+        }
       });
     }
   }
 
+
   caricaUtentiAssociati(prenotazioni: Prenotazione[]) {
     const idsUnici = Array.from(new Set(prenotazioni.map(p => p.utenteId)));
+    this.loading = true;
+    let count = 0;
 
     idsUnici.forEach(id => {
       if (!this.datiUtenti[id]) {
-        this.service.getUtenteById(id).subscribe((utente: Utente) => {
-          this.datiUtenti[id] = utente;
+        this.service.getUtenteById(id).subscribe({
+          next: (utente: Utente) => {
+            this.datiUtenti[id] = utente;
+            count++;
+            if (count === idsUnici.length) {
+              this.loading = false;
+            }
+          },
+          error: () => {
+            count++;
+            if (count === idsUnici.length) {
+              this.loading = false;
+            }
+          }
         });
+      } else {
+        count++;
+        if (count === idsUnici.length) {
+          this.loading = false;
+        }
       }
     });
+
+    // Se nessun id da caricare:
+    if (idsUnici.length === 0) {
+      this.loading = false;
+    }
   }
 
 
+
   eliminaPrenotazione(id: number) {
+    this.loading = true;
+
     this.service.eliminaPrenotazione(id).subscribe({
       next: (message) => {
         this.popupMessage = message;
+        this.caricaPrenotazioni(); // Ricarica la lista aggiornata
+        this.loading = false;
       },
       error: (err) => {
         this.popupMessage = err.error;
+        this.loading = false;
       }
     });
   }

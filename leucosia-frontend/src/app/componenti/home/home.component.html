@@ -177,6 +177,12 @@
   </div>
 </section>
 
+<div *ngIf="loadingCamere || loadingRecensioni || loadingSubmit" class="loading-overlay">
+  <div class="spinner"></div>
+  <p>Caricamento in corso...</p>
+</div>
+
+
 <div *ngIf="popupMessage" class="popup-overlay">
   <div class="popup-box">
     <p>{{ popupMessage }}</p>

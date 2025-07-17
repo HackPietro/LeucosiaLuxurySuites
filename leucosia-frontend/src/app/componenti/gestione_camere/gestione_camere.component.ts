@@ -17,6 +17,8 @@ export class Gestione_camereComponent implements OnInit {
   numeroNotti: number = 0;
   tipoOperazione: 'prezzo' | 'occupazione' = 'prezzo';
   popupMessage: string = '';
+  loading = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -27,13 +29,16 @@ export class Gestione_camereComponent implements OnInit {
   ngOnInit() {
     this.initializeForms();
 
+    this.loading = true;
     this.service.getCamere().subscribe({
       next: camere => {
         this.camere = camere;
         this.setupDateChangeListeners();
+        this.loading = false;
       },
       error: err => {
         this.popupMessage = 'Errore nel caricamento delle camere';
+        this.loading = false;
       }
     });
 
@@ -124,6 +129,7 @@ export class Gestione_camereComponent implements OnInit {
     const startStr = dataInizio.toISOString().split('T')[0];
     const endStr = dataFine.toISOString().split('T')[0];
 
+    this.loading = true;
     this.service.getPrezziCamera(cameraId, startStr, endStr).subscribe(prezzi => {
       const dateMap = new Map(prezzi.map(p => [p.data, p.prezzo]));
 
@@ -159,6 +165,7 @@ export class Gestione_camereComponent implements OnInit {
       }
 
       this.numeroNotti = notti;
+      this.loading = false;
     });
   }
 
@@ -244,13 +251,16 @@ export class Gestione_camereComponent implements OnInit {
     const dataFine = new Date(formVal.dataFine);
     const nuovoPrezzo = formVal.nuovoPrezzo;
 
+    this.loading = true;
     this.service.addPrezzoCamera(camera.id, nuovoPrezzo, dataInizio.toISOString(), dataFine.toISOString())
       .subscribe({
         next: (message: string) => {
           this.popupMessage = message;
+          this.loading = false;
         },
         error: (err) => {
           this.popupMessage = err.error;
+          this.loading = false;
         }
       });
   }
@@ -282,14 +292,17 @@ export class Gestione_camereComponent implements OnInit {
       totale: Number(totaleConSovrapprezzo.toFixed(2)),
     };
 
+    this.loading = true;
     this.service.createPrenotazione(prenotazioneFittizia).subscribe({
       next: (message) => {
         this.popupMessage = `Camera ${camera.nome} occupata dal ${formVal.dataInizio} al ${formVal.dataFine}!`;
         this.gestioneForm.reset();
         this.initializeForms();
+        this.loading = false;
       },
       error: (err) => {
         this.popupMessage = err.error;
+        this.loading = false;
       }
     });
   }
@@ -311,16 +324,19 @@ export class Gestione_camereComponent implements OnInit {
   }
 
   filtraCamereDisponibili(dataInizio: string, dataFine: string) {
+    this.loading = true;
     this.service.getCamereDisponibili(dataInizio, dataFine).subscribe({
       next: (camereDisponibili) => {
         this.camere = camereDisponibili;
         this.gestioneForm.get('camera')?.setValue(null);
+        this.loading = false;
         this.caricaPrezziPeriodo();
       },
       error: (err) => {
         this.popupMessage = 'Errore nel caricamento delle camere disponibili';
         this.camere = [];
         this.gestioneForm.get('camera')?.setValue(null);
+        this.loading = false;
       }
     });
   }

@@ -116,6 +116,11 @@
   </div>
 </div>
 
+<div *ngIf="loading" class="loading-overlay">
+  <div class="spinner"></div>
+  <p>Caricamento...</p>
+</div>
+
 <div *ngIf="popupMessage" class="popup-overlay">
   <div class="popup-box">
     <p>{{ popupMessage }}</p>

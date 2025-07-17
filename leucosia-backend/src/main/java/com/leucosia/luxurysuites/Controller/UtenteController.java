@@ -130,8 +130,11 @@ public class UtenteController {
             utenteOriginale.setCognome(nuovoUtenteDto.getCognome());
             utenteOriginale.setTelefono(nuovoUtenteDto.getTelefono());
 
-            if (!passwordEncoder.matches(nuovoUtenteDto.getPassword(), utenteOriginale.getPassword())) {
-                utenteOriginale.setPassword(passwordEncoder.encode(nuovoUtenteDto.getPassword()));
+            String nuovaPassword = nuovoUtenteDto.getPassword();
+            if (nuovaPassword != null && !nuovaPassword.trim().isEmpty()) {
+                if (!passwordEncoder.matches(nuovaPassword, utenteOriginale.getPassword())) {
+                    utenteOriginale.setPassword(passwordEncoder.encode(nuovaPassword));
+                }
             }
 
             utenteService.save(utenteOriginale.toEntity()); // ora è un update, non insert
