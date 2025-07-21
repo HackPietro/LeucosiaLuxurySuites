@@ -23,19 +23,19 @@ footer {
 }
 
 .footer-content {
-  display: flex;              /* Flex per centratura */
-  flex-wrap: wrap;            /* Permette più righe */
-  justify-content: center;    /* Centra orizzontalmente */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 30px;
   margin-bottom: 50px;
-  text-align: center;         /* Testo centrato dentro i box */
+  text-align: center;
 }
 
 .footer-info,
 .footer-links,
 .footer-checktimes,
 .footer-map {
-  flex: 1 1 250px;            /* Minimo 250px, cresce se può */
+  flex: 1 1 250px;
   max-width: 300px;
 }
 
@@ -110,8 +110,40 @@ footer {
 
 /* Responsive */
 @media screen and (max-width: 768px) {
+  footer {
+    padding: 40px 20px 30px;
+  }
+
   .footer-content {
     flex-direction: column;
     align-items: center;
   }
+
+  .footer-info,
+  .footer-links,
+  .footer-checktimes,
+  .footer-map {
+    max-width: 100%;
+  }
+
+  .footer-info h3,
+  .footer-links h3,
+  .footer-checktimes h3,
+  .footer-map h3 {
+    font-size: 1.1rem;
+  }
+
+  .footer-links ul li {
+    margin-bottom: 15px;
+  }
 }
+
+@media screen and (max-width: 480px) {
+  .footer-info,
+  .footer-links,
+  .footer-checktimes,
+  .footer-map {
+    max-width: 100%;
+  }
+}
+

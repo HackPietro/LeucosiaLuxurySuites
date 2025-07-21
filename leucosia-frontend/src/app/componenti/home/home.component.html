@@ -19,18 +19,16 @@
       </ul>
     </nav>
 
-    <!-- Bottone Login (visibile solo se NON loggato) -->
     <div *ngIf="!showMenu">
       <a mat-button routerLink="/login" class="profilo-link">
-        <mat-icon>person</mat-icon> Profilo
+        <mat-icon>person</mat-icon> Accedi!
       </a>
     </div>
 
-    <!-- Bottone Profilo con mat-menu (visibile solo se loggato) -->
     <div *ngIf="showMenu">
-      <button mat-button [matMenuTriggerFor]="profileMenu" class="profilo-link">
-        <mat-icon>person</mat-icon> Profilo
-      </button>
+      <a mat-button [matMenuTriggerFor]="profileMenu" class="profilo-link">
+        <mat-icon>person</mat-icon> Ciao, {{ nomeUtente}}
+      </a>
 
       <mat-menu #profileMenu="matMenu">
         <button mat-menu-item routerLink="/profilo">
@@ -45,13 +43,15 @@
 
         <button mat-menu-item routerLink="/gestione_prenotazioni">
           <mat-icon>calendar_today</mat-icon>
-          <span> Gestione Prenotazioni </span>
+          <span *ngIf="utenteOrAdmin() === 'admin'; else prenotazioniUser">Gestione Prenotazioni</span>
+          <ng-template #prenotazioniUser> Prenotazioni </ng-template>
         </button>
+
 
         <button mat-menu-item routerLink="/news">
           <mat-icon>article</mat-icon>
           <span *ngIf="utenteOrAdmin() === 'admin'; else newsUser"> Gestione News </span>
-          <ng-template #newsUser> News </ng-template>
+          <ng-template #newsUser> News e Aggiornamenti </ng-template>
         </button>
 
         <button mat-menu-item [routerLink]="utenteOrAdmin() === 'admin' ? '/gestione_messaggi' : '/richiedi_intervento'">
@@ -73,7 +73,7 @@
     </div>
 
     <div class="booking-button">
-      <a class="btn" href="/prenotazione">Prenota Ora</a>
+      <a mat-button class="btn" href="/prenotazione">Prenota Ora</a>
     </div>
   </div>
 </header>

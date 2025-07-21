@@ -47,3 +47,51 @@ header {
   color: #e8a75d;
   font-style: italic;
 }
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 10px 10px;
+  }
+
+  .logo-container {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .logo-image {
+    width: 35px;
+    height: 35px;
+    margin-top: 10px;
+    margin-right: 8px;
+  }
+
+  .logo h1 {
+    font-size: 1.3rem;
+  }
+
+  .logo p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 8px 8px;
+  }
+
+  .logo-image {
+    width: 28px;
+    height: 28px;
+    margin-top: 5px;
+    margin-right: 6px;
+  }
+
+  .logo h1 {
+    font-size: 1rem;
+  }
+
+  .logo p {
+    font-size: 0.75rem;
+  }
+}
+

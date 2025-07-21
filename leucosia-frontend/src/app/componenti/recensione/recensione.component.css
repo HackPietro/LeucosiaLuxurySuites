@@ -205,7 +205,6 @@
   transform: none;
 }
 
-/* Responsive */
 @media screen and (max-width: 768px) {
   .popup-container {
     width: 95%;
@@ -230,3 +229,23 @@
     font-size: 1.8rem;
   }
 }
+
+@media screen and (max-width: 480px) {
+  .popup-container {
+    max-height: 85vh;
+    padding: 15px;
+  }
+
+  .popup-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .comment-section textarea {
+    min-height: 80px;
+  }
+
+  .stars-container {
+    gap: 8px;
+  }
+}
+

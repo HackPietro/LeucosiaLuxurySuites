@@ -68,7 +68,7 @@ public class UtenteController {
             accessCookie.setHttpOnly(false);
             accessCookie.setSecure(false);
             accessCookie.setPath("/");
-            accessCookie.setMaxAge(900);
+            accessCookie.setMaxAge(900); // 15 minuti
             accessCookie.setDomain("localhost");
 
             Cookie refreshCookie = new Cookie("refresh_token", refreshToken);

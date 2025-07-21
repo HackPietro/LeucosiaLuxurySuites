@@ -31,7 +31,6 @@
             placeholder="Nuova password (opzionale)"
           />
 
-          <!-- L'icona si mostra solo se c'è un valore -->
           <button
             *ngIf="passwordValue"
             type="button"
@@ -56,7 +55,6 @@
   </div>
 </div>
 
-<!-- OVERLAY DI CARICAMENTO -->
 <div *ngIf="loading" class="loading-overlay">
   <div class="spinner"></div>
   <p>Caricamento...</p>

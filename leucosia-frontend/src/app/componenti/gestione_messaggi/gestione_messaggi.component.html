@@ -1,6 +1,5 @@
 <app-header></app-header>
 
-<!-- Sezione titolo hero -->
 <section class="hero-title">
   <div class="hero-content">
     <h2><mat-icon>inbox</mat-icon> Gestione Messaggi</h2>
@@ -17,7 +16,6 @@
   </div>
 
   <div class="messages-list" id="messagesList">
-    <!-- Mostra se ci sono messaggi -->
     <div *ngIf="messaggi.length > 0; else noMessages">
       <div *ngFor="let messaggio of messaggi" class="message-item message-card">
         <div class="message-header">
@@ -42,7 +40,6 @@
       </div>
     </div>
 
-    <!-- Template alternativo se non ci sono messaggi -->
     <ng-template #noMessages>
       <div class="no-messages">
         <mat-icon>inbox</mat-icon>

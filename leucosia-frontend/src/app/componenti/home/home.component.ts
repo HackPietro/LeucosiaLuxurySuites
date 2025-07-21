@@ -26,6 +26,8 @@ export class HomeComponent implements OnInit {
   loadingRecensioni = false;
   loadingSubmit = false;
 
+  nomeUtente = '';
+
 
   constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService, private service: Service) {}
 
@@ -39,6 +41,7 @@ export class HomeComponent implements OnInit {
       }
     });
     const utente = localStorage.getItem('utente');
+    this.nomeUtente = utente ? JSON.parse(utente).nome : '';
     this.showMenu = !!utente;
 
     this.loadingCamere = true;
@@ -59,7 +62,6 @@ export class HomeComponent implements OnInit {
       next: (data) => {
         const recensioniConUtente = data.map((recensione: any) => {
           return this.service.getUtenteById(recensione.utenteId).pipe(
-            // Combinare i dati utente con la recensione
             map((utente: any) => ({
               ...recensione,
               nome: utente.nome,
@@ -68,7 +70,6 @@ export class HomeComponent implements OnInit {
           );
         });
 
-        // Attendere che tutte le richieste siano completate
         forkJoin(recensioniConUtente).subscribe({
           next: (result) => {
             this.recensioni = result;

@@ -1,14 +1,24 @@
 <app-header></app-header>
 
-<!-- Hero Section -->
 <section class="hero-title">
   <div class="hero-content">
-    <h2><mat-icon>calendar_today</mat-icon> Gestione Prenotazioni</h2>
-    <p>Visualizza e gestisci le tue prenotazioni</p>
+    <h2>
+      <mat-icon>calendar_today</mat-icon>
+      <span *ngIf="utente?.tipologia === 'admin'; else prenotazioniUser">Gestione Prenotazioni</span>
+      <ng-template #prenotazioniUser> Prenotazioni</ng-template>
+    </h2>
+    <p>
+      <ng-container *ngIf="utente?.tipologia === 'admin'; else userText">
+        Visualizza e gestisci tutte le prenotazioni
+      </ng-container>
+      <ng-template #userText>
+        Visualizza e gestisci le tue prenotazioni
+      </ng-template>
+    </p>
   </div>
 </section>
 
-<!-- Main Container -->
+
 <div class="bookings-container">
   <!-- Header Actions -->
   <div class="header-actions">
@@ -17,10 +27,8 @@
     </a>
   </div>
 
-  <!-- Bookings List -->
   <div class="bookings-list" id="bookingsList">
 
-    <!-- Template se non ci sono prenotazioni -->
     <ng-template #noPrenotazioni>
       <div class="no-bookings">
         <mat-icon>calendar_today</mat-icon>
@@ -28,7 +36,6 @@
       </div>
     </ng-template>
 
-    <!-- Lista prenotazioni o fallback -->
     <ng-container *ngIf="prenotazioni.length > 0; else noPrenotazioni">
       <div *ngFor="let p of prenotazioni" class="booking-card">
         <div class="booking-header">
@@ -43,7 +50,6 @@
           </div>
 
           <div class="booking-actions">
-            <!-- Popup hover per admin -->
             <div *ngIf="utente?.tipologia === 'admin'" class="admin-popup-container">
               <mat-icon class="info-icon" (click)="toggleUserPopup(p.id!)">account_circle</mat-icon>
               <div class="admin-popup" *ngIf="activePopupId === p.id">
@@ -60,7 +66,6 @@
               </div>
             </div>
 
-            <!-- Pulsante elimina -->
             <button class="btn-delete" (click)="eliminaPrenotazione(p.id!)">
               <mat-icon>delete</mat-icon>
             </button>
@@ -68,15 +73,14 @@
         </div>
       </div>
     </ng-container>
-  </div> <!-- bookings-list -->
-</div> <!-- bookings-container -->
+  </div>
+</div>
 
 <div *ngIf="loading" class="loading-overlay">
   <div class="spinner"></div>
   <p>Caricamento...</p>
 </div>
 
-<!-- Popup messaggi -->
 <div *ngIf="popupMessage" class="popup-overlay">
   <div class="popup-box">
     <p>{{ popupMessage }}</p>

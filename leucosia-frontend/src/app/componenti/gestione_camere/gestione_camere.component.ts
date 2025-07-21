@@ -138,12 +138,9 @@ export class Gestione_camereComponent implements OnInit {
       let notti = 0;
       this.prezziGiornalieri = [];
 
-      // Se tipoOperazione è occupazione, consideriamo la dataFine esclusa
-      // se è prezzo, la consideriamo inclusa
       const isOccupazione = this.tipoOperazione === 'occupazione';
 
       while (true) {
-        // Condizione di uscita:
         if (isOccupazione) {
           if (current >= end) break; // dataFine esclusa
         } else {
@@ -283,7 +280,6 @@ export class Gestione_camereComponent implements OnInit {
     const totaleBase = this.prezziGiornalieri.reduce((acc, giorno) => acc + giorno.prezzo, 0);
     const totaleConSovrapprezzo = totaleBase * 1.1; // +10%
 
-    // Crea una prenotazione fittizia per occupare la camera
     const prenotazioneFittizia: Prenotazione = {
       utenteId: utente.id,
       dataCheckIn: new Date(formVal.dataInizio),

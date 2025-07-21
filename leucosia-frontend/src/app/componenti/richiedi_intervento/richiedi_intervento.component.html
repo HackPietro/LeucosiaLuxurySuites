@@ -2,7 +2,6 @@
 
 <div class="messages-container">
 
-  <!-- FORM -->
   <div class="message-form">
     <h2 class="form-title">
       <mat-icon>chat</mat-icon>
@@ -37,6 +36,9 @@
           [(ngModel)]="contenutoMessaggio"
           placeholder="Scrivi qui il tuo messaggio..."
         ></textarea>
+        <div class="char-counter">
+          {{ contenutoMessaggio?.length || 0 }}/1000 caratteri
+        </div>
       </div>
 
       <div class="form-actions">

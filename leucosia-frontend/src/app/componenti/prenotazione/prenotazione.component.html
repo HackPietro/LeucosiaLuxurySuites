@@ -1,17 +1,15 @@
 <app-header></app-header>
 
-<!-- Sezione titolo hero -->
 <section class="hero-title">
   <div class="hero-content">
     <h2><mat-icon>bed</mat-icon> Prenota una Camera</h2>
-    <p>Completa i dati per effettuare la prenotazione</p>
+    <p> Effettua una prenotazione</p>
   </div>
 </section>
 
 <div class="messages-container">
   <form [formGroup]="prenotazioneForm" (ngSubmit)="onSubmit()" class="booking-form">
 
-    <!-- Sezione Dettagli Prenotazione -->
     <div class="form-section">
       <h2 class="section-title">
         <mat-icon>calendar_today</mat-icon>
@@ -58,7 +56,6 @@
       </div>
     </div>
 
-    <!-- Sezione Riepilogo Prezzo -->
     <div class="form-section price-summary" *ngIf="prezzoTotale > 0">
       <h2 class="section-title">
         <mat-icon>list</mat-icon>
@@ -75,7 +72,6 @@
 
         <hr />
 
-        <!-- Totale con sovrapprezzo accanto -->
         <div class="price-row">
           <span><strong>Periodo: {{ numeroNotti }} notte/i</strong></span>
           <span class="price">
@@ -89,7 +85,6 @@
       </div>
     </div>
 
-    <!-- Sezione Metodo di Pagamento -->
     <div class="form-section" *ngIf="prezzoTotale > 0">
       <h2 class="section-title">
         <mat-icon>payment</mat-icon>
@@ -114,7 +109,6 @@
       </div>
     </div>
 
-    <!-- Pulsante di Invio -->
     <div class="form-actions" *ngIf="prezzoTotale > 0">
       <button type="submit" class="btn btn-primary btn-large">
         <mat-icon>check</mat-icon>
@@ -130,7 +124,6 @@
   <p>Caricamento...</p>
 </div>
 
-<!-- Popup Messaggio -->
 <div *ngIf="popupMessage" class="popup-overlay">
   <div class="popup-box">
     <p>{{ popupMessage }}</p>

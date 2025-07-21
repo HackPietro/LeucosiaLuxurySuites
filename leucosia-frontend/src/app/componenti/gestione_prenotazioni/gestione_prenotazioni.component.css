@@ -11,7 +11,6 @@ body {
   line-height: 1.6;
 }
 
-/* === Header === */
 header {
   background-color: #1a3a5f;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -58,7 +57,6 @@ header {
   font-style: italic;
 }
 
-/* === Hero Section === */
 .hero-title {
   padding: 150px 20px 40px;
   text-align: center;
@@ -84,7 +82,6 @@ header {
   font-style: italic;
 }
 
-/* Container principale */
 .bookings-container {
   max-width: 900px;
   margin: 0 auto;
@@ -92,7 +89,6 @@ header {
   min-height: 100vh;
 }
 
-/* Pulsanti */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -134,14 +130,14 @@ header {
 }
 
 .btn-delete {
-  background: none;       /* rimuove il background rosso */
-  color: #dc3545;         /* colore rosso icona cestino */
+  background: none;
+  color: #dc3545;
   border: none;
-  padding: 6px;           /* padding ridotto per area cliccabile */
-  border-radius: 50%;     /* area cliccabile circolare */
+  padding: 6px;
+  border-radius: 50%;
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
-  font-size: 1.7rem;      /* allineato a info-icon */
+  font-size: 1.7rem;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -149,18 +145,16 @@ header {
 }
 
 .btn-delete:hover {
-  color: #c82333;         /* colore rosso scuro al hover */
+  color: #c82333;
   transform: scale(1.2);
 }
 
-/* Header Actions */
 .header-actions {
   display: flex;
-  justify-content: center; /* centro orizzontale */
+  justify-content: center;
   margin-bottom: 30px;
 }
 
-/* Lista prenotazioni */
 .bookings-list {
   display: flex;
   flex-direction: column;
@@ -188,7 +182,6 @@ header {
   color: #1a3a5f;
 }
 
-/* Card prenotazioni */
 .booking-card {
   background-color: white;
   border-radius: 12px;
@@ -248,7 +241,6 @@ header {
   align-items: center;
 }
 
-/* Admin popup */
 .admin-popup-container {
   position: relative;
   display: inline-block;
@@ -256,10 +248,10 @@ header {
 
 .info-icon {
   color: #1a3a5f;
-  font-size: 1.7rem;      /* allineato a btn-delete */
+  font-size: 1.7rem;
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
-  padding: 6px;           /* padding uguale a btn-delete */
+  padding: 6px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -267,7 +259,7 @@ header {
 }
 
 .info-icon:hover {
-  color: #e8a75d;         /* colore giallo all’hover */
+  color: #e8a75d;
   transform: scale(1.2);
 }
 
@@ -291,7 +283,6 @@ header {
   display: block;
 }
 
-/* Popup */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -319,7 +310,6 @@ header {
   margin-bottom: 20px;
 }
 
-/* Back section */
 .back-to-home {
   display: flex;
   justify-content: center;
@@ -333,7 +323,7 @@ header {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.8); /* bianco trasparente */
+  background-color: rgba(255, 255, 255, 0.8);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -359,7 +349,6 @@ header {
   }
 }
 
-/* === Responsive Design === */
 @media screen and (max-width: 768px) {
   .header-container {
     flex-direction: column;
@@ -432,8 +421,21 @@ header {
     font-size: 0.85rem;
   }
 
+  .booking-meta span {
+    margin-bottom: 6px;
+  }
+
   .admin-popup {
     width: 180px;
     font-size: 0.8rem;
+  }
+
+  .popup-box {
+    padding: 16px 20px;
+  }
+
+  .booking-meta span,
+  .admin-popup {
+    word-break: break-word;
   }
 }

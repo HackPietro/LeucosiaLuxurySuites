@@ -1,6 +1,5 @@
 <app-header></app-header>
 
-<!-- Sezione titolo hero -->
 <section class="hero-title">
   <div class="hero-content">
     <h2><mat-icon>settings</mat-icon> Gestione Camere</h2>
@@ -9,7 +8,6 @@
 </section>
 
 <div class="messages-container">
-  <!-- Rimuovo l'header precedente e pulsante back perché ora è nella barra superiore -->
 
   <form [formGroup]="gestioneForm" (ngSubmit)="onSubmit()" class="booking-form">
 
@@ -68,7 +66,6 @@
       </div>
     </div>
 
-    <!-- Sezione Tipo Operazione -->
     <div class="form-section" *ngIf="prezziGiornalieri.length > 0">
       <h2 class="section-title">
         <mat-icon>task</mat-icon>
@@ -109,7 +106,6 @@
         </div>
       </div>
 
-      <!-- Form per modifica prezzo -->
       <div class="operation-form" *ngIf="tipoOperazione === 'prezzo'">
         <div class="form-group">
           <label for="nuovoPrezzo">Nuovo Prezzo per Notte *</label>
@@ -132,7 +128,6 @@
       </div>
     </div>
 
-    <!-- Sezione Riepilogo Prezzi Attuali -->
     <div class="form-section price-summary" *ngIf="prezziGiornalieri.length > 0">
       <h2 class="section-title">
         <mat-icon>list</mat-icon>
@@ -152,7 +147,6 @@
 
         <hr />
 
-        <!-- Riepilogo periodo -->
         <div class="price-row">
           <span><strong>Periodo: {{ numeroNotti }} notte/i</strong></span>
           <span class="price">
@@ -169,7 +163,6 @@
       </div>
     </div>
 
-    <!-- Pulsante di Invio -->
     <div class="form-actions" *ngIf="prezziGiornalieri.length > 0">
       <button type="submit" class="btn btn-primary btn-large">
         <mat-icon *ngIf="tipoOperazione === 'prezzo'">check</mat-icon>
@@ -186,7 +179,6 @@
   <p>Caricamento...</p>
 </div>
 
-<!-- Popup Messaggio -->
 <div *ngIf="popupMessage" class="popup-overlay">
   <div class="popup-box">
     <p>{{ popupMessage }}</p>

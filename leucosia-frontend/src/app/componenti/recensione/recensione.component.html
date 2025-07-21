@@ -26,9 +26,14 @@
         <textarea
           id="comment"
           [(ngModel)]="commento"
+          name="commento"
           placeholder="Condividi la tua esperienza con noi..."
-          rows="4">
+          rows="4"
+          maxlength="400">
         </textarea>
+        <div class="char-counter">
+          {{ commento?.length || 0 }}/400 caratteri
+        </div>
       </div>
 
       <div class="popup-actions">

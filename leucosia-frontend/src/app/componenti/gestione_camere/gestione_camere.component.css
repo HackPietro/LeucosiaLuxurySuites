@@ -11,7 +11,6 @@ body {
   line-height: 1.6;
 }
 
-/* === Nuova Barra Superiore con Logo === */
 header {
   background-color: #1a3a5f;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -58,7 +57,6 @@ header {
   font-style: italic;
 }
 
-/* === Sezione Titolo Hero === */
 .hero-title {
   padding: 150px 20px 30px;
   text-align: center;
@@ -84,7 +82,6 @@ header {
   font-style: italic;
 }
 
-/* Container principale - aggiustato per la nuova barra */
 .messages-container {
   max-width: 900px;
   margin: 0 auto;
@@ -92,7 +89,6 @@ header {
   min-height: 100vh;
 }
 
-/* Pulsanti */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -138,7 +134,6 @@ header {
   position: relative;
 }
 
-/* Form Styles */
 .booking-form {
   display: flex;
   flex-direction: column;
@@ -191,7 +186,6 @@ header {
   font-size: 1rem;
 }
 
-/* Input e Select Styles */
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -226,7 +220,6 @@ header {
   min-height: 100px;
 }
 
-/* Price Input Container */
 .price-input-container {
   position: relative;
   display: flex;
@@ -245,7 +238,6 @@ header {
   padding-left: 35px;
 }
 
-/* Error Styles */
 .form-group input.error,
 .form-group select.error,
 .form-group textarea.error {
@@ -267,7 +259,6 @@ header {
   font-size: 0.8rem;
 }
 
-/* Operation Methods */
 .operation-methods {
   display: flex;
   flex-direction: column;
@@ -330,7 +321,6 @@ header {
   font-size: 0.9rem;
 }
 
-/* Operation Form */
 .operation-form {
   margin-top: 25px;
   padding: 20px;
@@ -339,7 +329,6 @@ header {
   border: 1px solid #e0e0e0;
 }
 
-/* Price Summary */
 .price-summary {
   background: linear-gradient(135deg, #1a3a5f 0%, #2c5aa0 100%);
   color: white;
@@ -380,7 +369,6 @@ header {
   color: #e8a75d;
 }
 
-/* Form Actions */
 .form-actions {
   display: flex;
   justify-content: center;
@@ -393,7 +381,6 @@ header {
   margin-top: 20px;
 }
 
-/* Popup */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -427,7 +414,7 @@ header {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.8); /* bianco trasparente */
+  background-color: rgba(255, 255, 255, 0.8);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -453,7 +440,6 @@ header {
   }
 }
 
-/* === Responsive Design === */
 @media screen and (max-width: 768px) {
   .header-container {
     flex-direction: column;
@@ -501,6 +487,10 @@ header {
     padding: 12px 20px;
     font-size: 1rem;
   }
+
+  .form-group {
+    margin-bottom: 10px;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -516,11 +506,34 @@ header {
     padding: 15px;
   }
 
+  .operation-methods {
+    gap: 10px;
+  }
+
   .operation-label {
     padding: 12px 15px;
   }
 
+  .operation-label {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .operation-label div {
+    width: 100%;
+  }
+
   .operation-label i {
     font-size: 1.2rem;
+  }
+
+  .popup-box {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .popup-overlay {
+    overflow-y: auto;
   }
 }

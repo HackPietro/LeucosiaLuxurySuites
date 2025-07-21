@@ -63,10 +63,8 @@ export class ProfiloComponent implements OnInit{
   sendToServer(): void {
     this.loading = true;
 
-    // Controllo se la password è stata modificata
     const passwordModificata = this.passwordValue && this.passwordValue.trim() !== '';
 
-    // Costruzione oggetto aggiornamento
     const updatedData: any = {
       nome: this.nomeValue,
       cognome: this.cognomeValue,
@@ -87,7 +85,7 @@ export class ProfiloComponent implements OnInit{
           this.authService.logout();
           this.router.navigate(['/login']);
         } else {
-          this.isEditing = false; // Esce dalla modalità modifica
+          this.isEditing = false;
         }
       },
       error: (err) => {

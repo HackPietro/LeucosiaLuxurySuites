@@ -1,4 +1,3 @@
-/* Reset e base */
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +11,6 @@ body {
   line-height: 1.6;
 }
 
-/* === Nuova Barra Superiore con Logo === */
 header {
   background-color: #1a3a5f;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -59,15 +57,13 @@ header {
   font-style: italic;
 }
 
-/* Container principale */
 .messages-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 170px 20px 50px; /* Spazio per la barra superiore */
+  padding: 170px 20px 50px;
   min-height: 100vh;
 }
 
-/* Header della pagina */
 .messages-header {
   text-align: center;
   margin-bottom: 40px;
@@ -90,7 +86,6 @@ header {
   color: #e8a75d;
 }
 
-/* Form messaggi */
 .message-form {
   background-color: white;
   border-radius: 12px;
@@ -172,7 +167,6 @@ header {
   color: #dc3545;
 }
 
-/* Pulsanti */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -247,7 +241,6 @@ header {
   border-top: 1px solid #eee;
 }
 
-/* Alert di successo */
 .alert {
   padding: 15px;
   margin-bottom: 20px;
@@ -269,7 +262,6 @@ header {
   border-color: #f5c6cb;
 }
 
-/* Popup */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -313,7 +305,6 @@ header {
   background-color: #d4963f;
 }
 
-/* === Animazioni === */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -331,7 +322,7 @@ header {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.8); /* bianco trasparente */
+  background-color: rgba(255, 255, 255, 0.8);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -357,7 +348,6 @@ header {
   }
 }
 
-/* Responsive Design */
 @media screen and (max-width: 768px) {
   .header-container {
     flex-direction: column;
@@ -400,6 +390,12 @@ header {
     width: 100%;
     justify-content: center;
   }
+
+  .btn {
+    min-height: 44px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -421,5 +417,9 @@ header {
   .btn {
     padding: 10px 12px;
     font-size: 0.9rem;
+  }
+
+  .form-group textarea {
+    min-height: 150px;
   }
 }

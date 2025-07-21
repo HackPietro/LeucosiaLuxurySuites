@@ -1,17 +1,17 @@
 <app-header></app-header>
 
-<!-- Sezione titolo hero -->
 <section class="hero-title">
   <div class="hero-content">
     <h2>
-      <mat-icon>article</mat-icon> News & Aggiornamenti
+      <mat-icon>article</mat-icon>
+      <span *ngIf="utente?.tipologia === 'admin'; else newsUser"> Gestione News </span>
+      <ng-template #newsUser> News e Aggiornamenti </ng-template>
     </h2>
-    <p>Resta aggiornato sulle ultime novità di Leucosia Luxury Suites</p>
+    <p>Resta aggiornato sulle ultime novità</p>
   </div>
 </section>
 
 <div class="news-container">
-  <!-- Pulsante per creare nuova news (solo admin) -->
   <div class="news-header">
     <div *ngIf="utenteOrAdmin() === 'admin'" class="admin-actions">
       <button class="btn btn-create" (click)="toggleCreateForm()">
@@ -21,7 +21,6 @@
     </div>
   </div>
 
-  <!-- Form per creare nuova news (solo admin) -->
   <div *ngIf="showCreateForm && utenteOrAdmin() === 'admin'" class="create-news-form">
     <div class="form-container">
       <h2 class="form-title">
@@ -80,7 +79,6 @@
     </div>
   </div>
 
-  <!-- Lista delle news -->
   <div class="news-list">
     <div *ngIf="news.length === 0" class="no-news">
       <mat-icon>article</mat-icon>
@@ -100,7 +98,6 @@
           </div>
         </div>
 
-        <!-- Pulsante elimina (solo admin) -->
         <div *ngIf="utenteOrAdmin() === 'admin'" class="news-actions">
           <button class="btn-delete" (click)="newsItem.id !== undefined && eliminaNews(newsItem.id!)">
             <mat-icon>delete</mat-icon>

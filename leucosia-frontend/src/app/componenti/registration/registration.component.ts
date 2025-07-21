@@ -28,13 +28,11 @@ export class RegistrationComponent {
     this.successMessage = '';
     this.loading = true;
 
-    // Controllo campi compilati
     if (!this.nome || !this.cognome || !this.telefono || !this.email) {
       this.errorMessage = 'Tutti i campi sono obbligatori';
       return;
     }
 
-    // Validazione email
     if (!this.isValidEmail(this.email)) {
       this.errorMessage = 'Formato email non valido';
       return;
@@ -56,7 +54,6 @@ export class RegistrationComponent {
       },
       error: (err) => {
         this.loading = false;
-        // Gestione errore specifico se email già presente
         if (err.error?.error === 'Email già registrata') {
           this.errorMessage = 'Email già registrata, accedi o usa un\'altra email';
         } else {

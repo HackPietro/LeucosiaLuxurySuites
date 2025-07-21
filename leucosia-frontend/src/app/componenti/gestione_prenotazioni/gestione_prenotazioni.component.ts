@@ -83,7 +83,6 @@ export class Gestione_prenotazioniComponent implements OnInit {
       }
     });
 
-    // Se nessun id da caricare:
     if (idsUnici.length === 0) {
       this.loading = false;
     }
@@ -97,7 +96,7 @@ export class Gestione_prenotazioniComponent implements OnInit {
     this.service.eliminaPrenotazione(id).subscribe({
       next: (message) => {
         this.popupMessage = message;
-        this.caricaPrenotazioni(); // Ricarica la lista aggiornata
+        this.caricaPrenotazioni();
         this.loading = false;
       },
       error: (err) => {
@@ -119,9 +118,9 @@ export class Gestione_prenotazioniComponent implements OnInit {
 
   toggleUserPopup(bookingId: number) {
     if (this.activePopupId === bookingId) {
-      this.activePopupId = null; // chiudi se è già aperto
+      this.activePopupId = null;
     } else {
-      this.activePopupId = bookingId; // apri popup per quella prenotazione
+      this.activePopupId = bookingId;
     }
   }
 

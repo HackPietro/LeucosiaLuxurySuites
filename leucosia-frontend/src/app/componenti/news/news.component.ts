@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {News} from "../../Model/News";
 import {Service} from "../../Service/Service";
+import {Utente} from "../../Model/Utente";
 
 @Component({
   selector: 'app-news',
@@ -15,10 +16,12 @@ export class NewsComponent implements OnInit {
 
   popupMessage: string = '';
   loading: boolean = false;
+  utente: Utente | null = null;
 
   constructor(private service : Service) { }
 
   ngOnInit(): void {
+    this.utente = JSON.parse(localStorage.getItem('utente') || 'null');
     this.loading = true;
     this.service.getAllNews().subscribe({
       next: (newsList) => {

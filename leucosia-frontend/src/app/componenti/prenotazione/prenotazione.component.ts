@@ -36,7 +36,7 @@ export class PrenotazioneComponent implements OnInit {
     this.loading = true;
     this.service.getCamere().subscribe({
       next: camere => {
-        this.camere = camere; // Corretto: non lasciarlo vuoto
+        this.camere = camere;
         this.setupDateChangeListeners();
         this.loading = false;
       },
@@ -61,7 +61,7 @@ export class PrenotazioneComponent implements OnInit {
 
   private setupDateChangeListeners() {
     this.prenotazioneForm.get('checkIn')?.valueChanges.subscribe(() => {
-      this.prenotazioneForm.get('checkOut')?.updateValueAndValidity(); // <-- aggiorna validità checkOut
+      this.prenotazioneForm.get('checkOut')?.updateValueAndValidity();
       this.onDateChange();
     });
 
@@ -88,7 +88,6 @@ export class PrenotazioneComponent implements OnInit {
   }
 
   private initializeForms() {
-    // Form principale prenotazione
     this.prenotazioneForm = this.fb.group({
       email: [''],
       telefono: [''],
@@ -99,7 +98,6 @@ export class PrenotazioneComponent implements OnInit {
       metodoPagamento: ['contanti']
     });
 
-    // Imposta data minima per check-in (oggi)
     const oggi = new Date().toISOString().split('T')[0];
     const checkInControllo = this.prenotazioneForm.get('checkIn');
     if (checkInControllo) {
@@ -137,7 +135,6 @@ export class PrenotazioneComponent implements OnInit {
     ) {
       this.filtraCamereDisponibili(checkIn, checkOut);
     } else {
-      // Se date non valide resetta camere e selezione
       this.camere = [];
       this.prenotazioneForm.get('camera')?.setValue(null);
     }
@@ -168,7 +165,6 @@ export class PrenotazioneComponent implements OnInit {
     return null;
   }
 
-  // Metodi per gestione eventi del form
   gestioneCheckInCheckOut() {
     const dataCheckIn = new Date(this.prenotazioneForm.get('checkIn')?.value);
     const prossimoGiorno = new Date(dataCheckIn);
@@ -251,7 +247,6 @@ export class PrenotazioneComponent implements OnInit {
 
     const errors = field.errors;
 
-    // Errori comuni
     if (errors['required']) return 'Questo campo è obbligatorio';
 
     // Errori specifici per campo
@@ -266,7 +261,6 @@ export class PrenotazioneComponent implements OnInit {
     return 'Campo non valido';
   }
 
-  // Invio form
   onSubmit() {
     if (this.prenotazioneForm.invalid) {
       this.segnaFormGroupToccato(this.prenotazioneForm);
